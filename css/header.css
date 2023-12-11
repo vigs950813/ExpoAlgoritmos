@@ -1,0 +1,20 @@
+header {
+    background: rgb(1, 42, 91);
+    background: linear-gradient(180deg, rgba(1, 42, 91, 1) 0%, rgba(0, 116, 255, 1) 100%);
+}
+
+.image{
+    opacity: 0;
+}
+
+.col{
+    margin: 5px;
+}
+
+.centerColText1,.centerColText2,.centerColText3 {
+    font-family: "Inconsolata";
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    opacity: 0;
+}

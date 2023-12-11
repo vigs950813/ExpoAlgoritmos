@@ -1,0 +1,19 @@
+
+.card{
+  background-color: #E9E9E9;
+}
+
+
+.card-header{
+  text-align: center;
+  font-family: "Inconsolata";
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.card-body{
+  font-family: "Inconsolata";
+  font-size: 20px;
+  font-weight: bold;
+}
+
