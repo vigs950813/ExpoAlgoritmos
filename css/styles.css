@@ -1,4 +1,85 @@
+header {
+  background: rgb(1, 42, 91);
+  background: linear-gradient(180deg, rgba(1, 42, 91, 1) 0%, rgba(0, 116, 255, 1) 100%);
+}
+
+header .col {
+  margin: 5px;
+}
+
+
+header .centerColText1,
+header .centerColText2,
+header .centerColText3 {
+  font-family: "Inconsolata";
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+nav {
+  
+  font-family: "Inconsolata";
+  font-size: 20px;
+  font-weight: bold;
+  background: #E9E9E9;
+
+}
+
+nav .btn{
+  background-color: #408DFF;
+  font-weight: bold;
+  color: white;
+}
+
+nav .btn:hover{
+  background-color: white;
+  transition: 0.3s;
+  color: black;
+}
+
+nav .btn:active{
+  background-color: white;
+  color: black;
+}
+
+nav .dropdown-menu{
+  background-color: #E9E9E9;
+}
+
+nav .dropdown-item:hover{
+  background-color: gray;
+  color: white;
+}
+
+
 body {
   background-color: #749BBF;
 }
 
+
+.card {
+  background-color: #E9E9E9;
+}
+
+
+.card-header {
+  text-align: center;
+  font-family: "Inconsolata";
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.card-body {
+  font-family: "Inconsolata";
+  font-size: 20px;
+  font-weight: bold;
+}
+
+
+footer {
+  font-family: "Inconsolata";
+  font-size: 20px;
+  background: rgb(1, 42, 91);
+  background: linear-gradient(180deg, rgba(1, 42, 91, 1) 0%, rgba(0, 116, 255, 1) 100%);
+}
