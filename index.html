@@ -63,26 +63,35 @@
   <!-- Header -->
 
   <!-- Nav -->
-  <nav class="navbar">
+  <nav class="navbar navbar-expand-lg">
     <div class="container-fluid">
-      <a class="navbar-brand">Aquí debería ir el tiburonsín u ha ha!</a>
-      <form class="d-flex" style="gap: 5px;">
-        <button class="btn active" type="button" data-bs-toggle="button" aria-pressed="true"
-          id="inicioBtn">Inicio</button>
-        <div class="dropdown">
-          <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
-            aria-expanded="false">
-            Algoritmos
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" style="margin-top: 0;">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </div>
-        <button class="btn active" type="button" data-bs-toggle="button" aria-pressed="true"
-          id="inicioBtn">Manual de usuario</button>
-      </form>
+      <img src="..." class="img-thumbnail" alt="Error al cargar imagen...">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Pricing</a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Dropdown link
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+              <li><a class="dropdown-item" href="#">Action</a></li>
+              <li><a class="dropdown-item" href="#">Another action</a></li>
+              <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
     </div>
   </nav>
   
@@ -99,14 +108,35 @@
           Ejemplo de título...
         </div>
         <div class="card-body">
+          <div class="row justify-content-between">
+            <div class="col-4" style="display: grid;">
+              <label for="newNodeId">Nuevo Nodo ID:</label>
+              <input type="text" id="newNodeId" required>
+              <button type="button" id="addNodeButton">Agregar Nodo</button>
+          
+              <label for="edgeWeight">Peso de la Arista:</label>
+              <input type="text" id="edgeWeight">
+              <button type="button" id="editEdgeWeightButton">Editar Peso de la Arista</button>
+          
+              <button type="button" id="deleteSelectedNode">Eliminar Nodo Seleccionado</button>
+            </div>
+            <div class="col-4">
+              <div id="cy" style="align-content:end;"></div>
+  
+            </div>
+          </div>
 
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Temporibus atque voluptas odio quis ipsa, eos
-            obcaecati alias et sunt illum totam quas consectetur officiis eum tempore voluptatibus amet sapiente sed.
-          </p>
-
+       
         </div>
       </div>
+      
+      <div class="container">
+     
+   
+      
       </div>
+
+
     </section>
     <!-- Section -->
   </main>
@@ -135,9 +165,8 @@
     crossorigin="anonymous"></script>
   <!-- Bootstrap Js -->
 
-  <!-- GSAP -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
-  <!-- GSAP -->
+  <script src="https://unpkg.com/cytoscape@3.18.0/dist/cytoscape.min.js"></script>
+  <script src="js/prim.js"></script>
 
   <!-- Local Js -->
   <script src="js/navbarDropdown.js"></script>

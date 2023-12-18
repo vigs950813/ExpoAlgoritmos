@@ -22,26 +22,19 @@ nav {
   font-family: "Inconsolata";
   font-size: 20px;
   font-weight: bold;
-  background: #E9E9E9;
-
 }
 
-nav .btn{
-  background-color: #408DFF;
-  font-weight: bold;
-  color: white;
+.navbar.navbar-expand-lg {
+  background-color:  rgba(0, 116, 255, 1);
 }
 
-nav .btn:hover{
-  background-color: white;
-  transition: 0.3s;
+.nav-link{
   color: black;
+  background-color: white;
+  border-radius: 5px;
+  margin-left: 5px;
 }
 
-nav .btn:active{
-  background-color: white;
-  color: black;
-}
 
 nav .dropdown-menu{
   background-color: #E9E9E9;
@@ -50,6 +43,11 @@ nav .dropdown-menu{
 nav .dropdown-item:hover{
   background-color: gray;
   color: white;
+}
+
+
+nav .collapse{
+  justify-content: center;
 }
 
 
@@ -74,6 +72,14 @@ body {
   font-family: "Inconsolata";
   font-size: 20px;
   font-weight: bold;
+}
+
+
+#cy {
+  height: 400px;
+  width: 65%;
+  display: block;
+  border: solid black 2px;
 }
 
 
