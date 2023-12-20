@@ -56,6 +56,23 @@ body {
 }
 
 
+.form-control{
+  background-color: white;
+  text-align: center;
+  font-family: "Inconsolata";
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.btn{
+  background-color: #DFDFDF;
+  color: black;
+  font-family: "Inconsolata";
+  font-weight: bold;
+  font-size: 20px;
+}
+
+
 .card {
   background-color: #E9E9E9;
 }
@@ -64,7 +81,7 @@ body {
 .card-header {
   text-align: center;
   font-family: "Inconsolata";
-  font-size: 20px;
+  font-size: 30px;
   font-weight: bold;
 }
 
@@ -74,14 +91,45 @@ body {
   font-weight: bold;
 }
 
-
-#cy {
-  height: 400px;
-  width: 65%;
-  display: block;
-  border: solid black 2px;
+.form-control,
+.btn {
+  box-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.21);
+  -webkit-box-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.21);
+  -moz-box-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.21);
 }
 
+
+.btn:active {
+  background-color: black;
+}
+
+
+
+.d-grid>.btn {
+  border-color: black;
+  box-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.21);
+  -webkit-box-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.21);
+  -moz-box-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.21);
+}
+
+
+.section2{
+  background-color: #DFDFDF;
+  display: flex;
+}
+
+.columna {
+  flex: 1;
+  padding: 20px;
+  border: 1px solid #ccc;
+}
+
+svg{
+  width: 100%;
+  border-style: solid;
+  border-color: black;
+  height: 500px;
+}
 
 footer {
   font-family: "Inconsolata";

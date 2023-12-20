@@ -20,6 +20,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inconsolata&display=swap" rel="stylesheet" />
   <!-- Importación de fuente Iconsolata -->
 
+
   <!-- Page title -->
   <title>Análisis y diseño de algoritmos</title>
   <!-- Page title -->
@@ -29,7 +30,6 @@
 <!-- Body -->
 
 <body>
-
   <!-- Header -->
   <header>
     <div class="container">
@@ -37,24 +37,18 @@
         <div class="row align-items-center">
           <div class="col">
             <img src="images/logoBlancoESCOM.png" class="image" id="logoBlancoEscom"
-              alt="Error al cargar imagen (logoBlancoEscom.png)" style="width: 60%;">
+              alt="Error al cargar imagen (logoBlancoEscom.png)" style="width: 60%" />
           </div>
           <div class="col">
-            <div class="centerColText1">
-              Instituto Politécnico Nacional
-            </div>
+            <div class="centerColText1">Instituto Politécnico Nacional</div>
 
-            <div class="centerColText2">
-              Escuela Superior de Cómputo
-            </div>
+            <div class="centerColText2">Escuela Superior de Cómputo</div>
 
-            <div class="centerColText3">
-              Análisis y Diseño de Algoritmos
-            </div>
+            <div class="centerColText3">Análisis y Diseño de Algoritmos</div>
           </div>
           <div class="col">
             <img src="images/logoBlancoIPN.png" class="image" id="logoBlancoIPN"
-              alt="Error al cargar imagen (logoBlancoIPN.png)" style="width: 30%;">
+              alt="Error al cargar imagen (logoBlancoIPN.png)" style="width: 30%" />
           </div>
         </div>
       </div>
@@ -64,7 +58,7 @@
 
   <!-- Nav -->
   <nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
+    <!-- <div class="container-fluid">
       <img src="..." class="img-thumbnail" alt="Error al cargar imagen...">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -92,69 +86,110 @@
           </li>
         </ul>
       </div>
-    </div>
+    </div> -->
   </nav>
-  
 
   <!-- Nav -->
 
+  <section class="section1">
 
-  <!-- Main -->
-  <main>
-    <!-- Section -->
-    <section>
+    <div class="card">
+      <div class="card-header">Algoritmo de Prim</div>
+      <div class="card-body">
+
+
+        <div class="input-group mb-3">
+          <input type="number" min="3" class="form-control" placeholder="Ingresa el número de nodos a utilizar"
+            aria-label="Recipient's username" aria-describedby="button-addon2" id="numeroNodosInput">
+          <button class="btn btn-outline-secondary" type="button" id="btnCrearNodos">Crear Nodos</button>
+        </div>
+
+        <div class="d-grid gap-2">
+          
+          <button class="btn btn-outline-secondary" type="button" id="btnEliminarNodo">Eliminar nodo</button>
+          
+            <button class="btn btn-outline-secondary" type="button" id="btnCrearEnlaces">Crear enlaces</button>
+        </div>
+
+
+
+      </div>
+    </div>
+
+  </section>
+
+
+
+
+  <section class="section2">
+
+    <div class="columna">
+
       <div class="card">
-        <div class="card-header">
-          Ejemplo de título...
-        </div>
+
+        <div class="card-header">Pasos</div>
         <div class="card-body">
-          <div class="row justify-content-between">
-            <div class="col-4" style="display: grid;">
-              <label for="newNodeId">Nuevo Nodo ID:</label>
-              <input type="text" id="newNodeId" required>
-              <button type="button" id="addNodeButton">Agregar Nodo</button>
-          
-              <label for="edgeWeight">Peso de la Arista:</label>
-              <input type="text" id="edgeWeight">
-              <button type="button" id="editEdgeWeightButton">Editar Peso de la Arista</button>
-          
-              <button type="button" id="deleteSelectedNode">Eliminar Nodo Seleccionado</button>
-            </div>
-            <div class="col-4">
-              <div id="cy" style="align-content:end;"></div>
-  
-            </div>
-          </div>
-
-       
+          <ol>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+            <li></li>
+          </ol>
         </div>
-      </div>
-      
-      <div class="container">
-     
-   
-      
+
       </div>
 
+    </div>
 
-    </section>
-    <!-- Section -->
-  </main>
-  <!-- Main -->
+    <div class="columna">
+
+      <div class="card">
+
+        <div class="card-header">Área de trabajo</div>
+        <div class="card-body">
+          <svg id="lienzo"></svg>
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+
+  </section>
+
+
+
 
   <!-- Footer -->
   <footer>
-    <div class="card">
+    <!-- <div class="card">
       <div class="card-body">
         Ejemplo de contenido para footer...
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos illo eligendi unde molestiae consectetur,
         repellendus impedit vero nostrum, tenetur reprehenderit eos ipsum similique doloribus. Minima cupiditate dicta
         illo. Eos, nemo.
       </div>
-    </div>
+    </div> -->
   </footer>
   <!-- Footer -->
-
 
   <!-- Bootstrap Js -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
@@ -165,13 +200,30 @@
     crossorigin="anonymous"></script>
   <!-- Bootstrap Js -->
 
-  <script src="https://unpkg.com/cytoscape@3.18.0/dist/cytoscape.min.js"></script>
-  <script src="js/prim.js"></script>
+  <!-- Js -->
 
-  <!-- Local Js -->
-  <script src="js/navbarDropdown.js"></script>
-  <!-- Local Js -->
+    <!-- Local -->
 
+      <!-- <script src="js/navbarDropdown.js"></script> -->
+      <script src="js/crearNodos.js"></script>
+      <script src="js/editarNombreNodo.js"></script>
+      <script src="js/eliminarNodo.js"></script>
+      <script src="js/crearEnlaces.js"></script>
+      
+      
+
+    <!-- Local -->
+
+    <!-- D3.js -->
+
+      <script src="https://d3js.org/d3.v7.min.js"></script>
+
+    <!-- D3.js -->
+
+  <!-- Js -->
+
+
+    
 
 </body>
 <!-- Body -->
