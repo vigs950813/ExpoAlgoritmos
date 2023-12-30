@@ -117,18 +117,11 @@ body {
   background-color: #DFDFDF;
   display: flex;
 }
-
-.columna {
-  flex: 1;
-  padding: 20px;
-  border: 1px solid #ccc;
-}
-
-svg{
-  width: 100%;
-  border-style: solid;
-  border-color: black;
-  height: 500px;
+#cy {
+  height: 900px;
+  width: 65%;
+  display: block;
+  border: solid black 2px;
 }
 
 footer {

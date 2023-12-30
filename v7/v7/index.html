@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi primer gráfico con Cytoscape.js</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      height: 100vh;
+      margin: 0;
+      box-sizing: border-box;
+    }
+
+    .op {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      box-sizing: border-box;
+      margin: 20px; /* Margen del 20% en cada lado */
+    }
+
+    .op > * {
+      margin-bottom: 10px;
+    }
+
+    #cy-container {
+      display: flex;
+      height: 60%;
+      width: 100%;
+      margin: 20px; /* Margen del 20% en cada lado */
+      box-sizing: border-box;
+    }
+
+    #cy {
+      flex: 0 0 60%; /* 60% de la altura, no se puede expandir ni contraer */
+      border: solid black 2px;
+      box-sizing: border-box;
+    }
+
+    #primSteps {
+      flex: 0 0 40%; /* 40% de la altura, no se puede expandir ni contraer */
+      padding: 10px;
+      border: solid black 2px;
+      overflow-y: scroll;
+      box-sizing: border-box;
+    }
+
+    .considering-edge {
+      line-color: red !important;
+      target-arrow-color: red !important;
+    }
+
+    .mst {
+      line-color: green !important;
+      target-arrow-color: green !important;
+    }
+
+    .not-in-mst {
+      line-opacity: 0.3 !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="op">
+    <label for="newNodeId">Nuevo Nodo ID:</label>
+    <input type="text" id="newNodeId" required>
+    <button type="button" id="addNodeButton">Agregar Nodo</button>
+
+    <label for="edgeWeight">Peso de la Arista:</label>
+    <input type="text" id="edgeWeight">
+    <button type="button" id="addEdgeButton">Agregar Arista</button>
+
+    <button type="button" id="deleteSelectedNode">Eliminar Nodo Seleccionado</button>
+    <button type="button" id="editEdgeWeightButton">Editar Peso de la Arista</button>
+
+    <!-- Agregar un cuadro de texto para ingresar el nodo de inicio -->
+    <label for="startNodeId">Nodo de Inicio:</label>
+    <input type="text" id="startNodeId" required>
+    <button type="button" id="runPrimAlgorithmButton">Ejecutar Algoritmo de Prim</button>
+  </div>
+  
+  <div id="cy-container">
+    <div id="cy"></div>
+    <div id="primSteps"></div>
+  </div>
+  
+  <script src="https://unpkg.com/cytoscape@3.18.0/dist/cytoscape.min.js"></script>
+  <script src="app.js"></script>
+  
+</body>
+</html>
+
+
+
