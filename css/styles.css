@@ -30,10 +30,11 @@ nav {
 
 .nav-link{
   color: black;
-  background-color: white;
+  background-color: #BFDDFF;
   border-radius: 5px;
   margin-left: 5px;
 }
+
 
 
 nav .dropdown-menu{
@@ -123,6 +124,44 @@ body {
   display: block;
   border: solid black 2px;
 }
+
+#cy-container {
+  display: flex;
+  height: 60%;
+  width: 100%;
+  margin: 20px; /* Margen del 20% en cada lado */
+  box-sizing: border-box;
+
+}
+
+
+#primSteps {
+  flex: 0 0 40%; /* 40% de la altura, no se puede expandir ni contraer */
+  padding: 10px;
+  border: solid black 2px;
+  overflow-y: scroll;
+  box-sizing: border-box;
+}
+
+
+
+.considering-edge {
+  line-color: red !important;
+  target-arrow-color: red !important;
+}
+
+.mst {
+  line-color: green !important;
+  target-arrow-color: green !important;
+}
+
+.not-in-mst {
+  line-opacity: 0.3 !important;
+}
+
+
+
+
 
 footer {
   font-family: "Inconsolata";
