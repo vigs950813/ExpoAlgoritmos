@@ -1,3 +1,4 @@
+/* Header styles */
 header {
   background: rgb(1, 42, 91);
   background: linear-gradient(180deg, rgba(1, 42, 91, 1) 0%, rgba(0, 116, 255, 1) 100%);
@@ -7,57 +8,64 @@ header .col {
   margin: 5px;
 }
 
-
 header .centerColText1,
 header .centerColText2,
 header .centerColText3 {
   font-family: "Inconsolata";
   color: white;
   font-weight: bold;
-  font-size: 20px;
+  font-size: 15px; /* Reducir el tamaño de fuente */
+  margin-bottom: 5px; /* Agregar margen inferior */
 }
 
+/* Agregar estilo para la clase 'image' */
+.image {
+  max-width: 30%; /* Ajustar el tamaño máximo al ancho disponible */
+  height: auto; /* Mantener la proporción original */
+}
+#logoBlancoIPN{
+  width: 20%;
+}
+
+/* Navigation styles */
 nav {
-  
   font-family: "Inconsolata";
   font-size: 20px;
   font-weight: bold;
+  width: 100%;
 }
 
 .navbar.navbar-expand-lg {
-  background-color:  rgba(0, 116, 255, 1);
+  background-color: rgba(0, 116, 255, 1);
 }
 
-.nav-link{
+.nav-link {
   color: black;
   background-color: #BFDDFF;
   border-radius: 5px;
   margin-left: 5px;
 }
 
-
-
-nav .dropdown-menu{
+nav .dropdown-menu {
   background-color: #E9E9E9;
 }
 
-nav .dropdown-item:hover{
+nav .dropdown-item:hover {
   background-color: gray;
   color: white;
 }
 
-
-nav .collapse{
+nav .collapse {
   justify-content: center;
 }
 
-
+/* Body styles */
 body {
   background-color: #749BBF;
 }
 
-
-.form-control{
+/* Form and button styles */
+.form-control {
   background-color: white;
   text-align: center;
   font-family: "Inconsolata";
@@ -65,7 +73,7 @@ body {
   font-size: 20px;
 }
 
-.btn{
+.btn {
   background-color: #DFDFDF;
   color: black;
   font-family: "Inconsolata";
@@ -73,11 +81,10 @@ body {
   font-size: 20px;
 }
 
-
+/* Card styles */
 .card {
   background-color: #E9E9E9;
 }
-
 
 .card-header {
   text-align: center;
@@ -99,25 +106,23 @@ body {
   -moz-box-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.21);
 }
 
-
 .btn:active {
   background-color: black;
 }
 
-
-
-.d-grid>.btn {
+.d-grid > .btn {
   border-color: black;
   box-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.21);
   -webkit-box-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.21);
   -moz-box-shadow: 0px 0px 8px 1px rgba(0, 0, 0, 0.21);
 }
 
-
-.section2{
+/* Section 2 styles */
+.section2 {
   background-color: #DFDFDF;
   display: flex;
 }
+
 #cy {
   height: 900px;
   width: 65%;
@@ -131,9 +136,7 @@ body {
   width: 100%;
   margin: 20px; /* Margen del 20% en cada lado */
   box-sizing: border-box;
-
 }
-
 
 #primSteps {
   flex: 0 0 40%; /* 40% de la altura, no se puede expandir ni contraer */
@@ -143,8 +146,7 @@ body {
   box-sizing: border-box;
 }
 
-
-
+/* Cytoscape styles */
 .considering-edge {
   line-color: red !important;
   target-arrow-color: red !important;
@@ -159,13 +161,36 @@ body {
   line-opacity: 0.3 !important;
 }
 
+/* Estilos para el cuerpo de la página */
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Establece el tamaño mínimo del cuerpo para ocupar al menos el 100% de la altura de la pantalla */
+}
 
+/* Estilos para el contenido principal */
+.main-content {
+  flex: 1; /* Hace que el contenido principal ocupe el espacio restante */
+}
 
-
-
-footer {
+/* Estilos para el pie de página */
+.footer {
+  margin-top: auto; /* Empuja el pie de página hacia la parte inferior */
+  background-color: #f8f9fa; /* Color de fondo */
+  padding: 10px; /* Espaciado interno reducido */
+  text-align: center;
   font-family: "Inconsolata";
   font-size: 20px;
+  color: black;
   background: rgb(1, 42, 91);
   background: linear-gradient(180deg, rgba(1, 42, 91, 1) 0%, rgba(0, 116, 255, 1) 100%);
+}
+
+/* Estilos para la descripción */
+.description {
+  font-family: "Inconsolata";
+  font-size: 25px;
+  color: #343a40; /* Color del texto oscuro */
+  margin: 20px 0; /* Margen superior e inferior */
+  text-align: center;
 }
