@@ -189,48 +189,48 @@ document.addEventListener('DOMContentLoaded', function () {
     cy.edges().removeClass('not-in-mst');
   });
 
-// Función para guardar el peso de la arista
-function guardarPeso() {
-  var edgeWeight = document.getElementById('edgeWeight').value;
-  var edgeWeightInput = document.getElementById("edgeWeight");
-  var edgeWeightErrorElement = document.getElementById("edgeWeightError");
+  // Función para guardar el peso de la arista
+  function guardarPeso() {
+    var edgeWeight = document.getElementById('edgeWeight').value;
+    var edgeWeightInput = document.getElementById("edgeWeight");
+    var edgeWeightErrorElement = document.getElementById("edgeWeightError");
 
-  // Validaciones
-  if (edgeWeight.trim() !== '' && edgeWeight >= 0) {
-    clearError(edgeWeightErrorElement, edgeWeightInput);
+    // Validaciones
+    if (edgeWeight.trim() !== '' && edgeWeight >= 0) {
+      clearError(edgeWeightErrorElement, edgeWeightInput);
 
-    // Crear los IDs únicos para ambas direcciones de la arista
-    var edgeId1 = selectedNodeId + node.id();
-    var edgeId2 = node.id() + selectedNodeId;
+      // Crear los IDs únicos para ambas direcciones de la arista
+      var edgeId1 = selectedNodeId + node.id();
+      var edgeId2 = node.id() + selectedNodeId;
 
-    // Buscar la arista existente en ambas direcciones
-    var existingEdge1 = cy.getElementById(edgeId1);
-    var existingEdge2 = cy.getElementById(edgeId2);
+      // Buscar la arista existente en ambas direcciones
+      var existingEdge1 = cy.getElementById(edgeId1);
+      var existingEdge2 = cy.getElementById(edgeId2);
 
-    if (existingEdge1.nonempty()) {
-      // La arista ya existe en la dirección seleccionada
-      existingEdge1.data('weight', edgeWeight);
-    } else if (existingEdge2.nonempty()) {
-      // La arista ya existe en la dirección inversa
-      existingEdge2.data('weight', edgeWeight);
+      if (existingEdge1.nonempty()) {
+        // La arista ya existe en la dirección seleccionada
+        existingEdge1.data('weight', edgeWeight);
+      } else if (existingEdge2.nonempty()) {
+        // La arista ya existe en la dirección inversa
+        existingEdge2.data('weight', edgeWeight);
+      } else {
+        // La arista no existe en ninguna dirección, agrégala al grafo
+        cy.add({ data: { id: edgeId1, source: selectedNodeId, target: node.id(), weight: edgeWeight } });
+      }
+
+      // Guardar el ID de la arista recién creada o actualizada
+      selectedEdgeId = edgeId1;
+
+      // Limpiar la selección y ocultar el modal
+      document.getElementById('edgeWeight').value = "";
+      edgeWeightModal.hide();
+      cy.nodes().removeClass('selected');
+      selectedNodeId = null;
     } else {
-      // La arista no existe en ninguna dirección, agrégala al grafo
-      cy.add({ data: { id: edgeId1, source: selectedNodeId, target: node.id(), weight: edgeWeight } });
+      showError("Ingrese un número válido.", edgeWeightErrorElement, edgeWeightInput);
     }
-
-    // Guardar el ID de la arista recién creada o actualizada
-    selectedEdgeId = edgeId1;
-
-    // Limpiar la selección y ocultar el modal
     document.getElementById('edgeWeight').value = "";
-    edgeWeightModal.hide();
-    cy.nodes().removeClass('selected');
-    selectedNodeId = null;
-  } else {
-    showError("Ingrese un número válido.", edgeWeightErrorElement, edgeWeightInput);
   }
-  document.getElementById('edgeWeight').value = "";
-}
 
   // Función para validar si ya se seleccionó una arista previamente
   function editaristabutton() {
@@ -255,21 +255,68 @@ function guardarPeso() {
     containerError.classList.remove("alert", "alert-danger");
     inputError.classList.remove("is-invalid");
   }
-//_________________________________________Funciones de ALgoritmo Prim______________________________________--
+  //_________________________________________Funciones de ALgoritmo Prim______________________________________--
   // Lógica del algoritmo de Prim
   function runPrimAlgorithm() {
     var startNodeId = document.getElementById('startNodeId').value.trim().toUpperCase();
     var startNodeIdInput = document.getElementById('startNodeId');
-    clearError(errorContainer,startNodeIdInput);
+    clearError(errorContainer, startNodeIdInput);
     if (cy.getElementById(startNodeId).nonempty()) {
       cy.edges().removeClass('mst');
       cy.edges().removeClass('not-in-mst');
-      runPrimAlgorithmFromNode(startNodeId);
+      altRunPrimFromNode(startNodeId);
     } else {
 
-      showError("El nodo de inicio no existe en el grafo.",errorContainer,startNodeIdInput);
+      showError("El nodo de inicio no existe en el grafo.", errorContainer, startNodeIdInput);
     }
-    
+
+  }
+
+
+  function altRunPrimFromNode(startNodeId) {
+    var primStepsDiv = document.getElementById('primSteps');
+    primStepsDiv.innerHTML = '';
+
+    let includedNodes = new Set();
+    includedNodes.add(startNodeId);
+
+    function getAvailableEdges() {
+      var edges = [];
+
+      includedNodes.forEach(function (nodeId) {
+        cy.getElementById(nodeId).connectedEdges().forEach(function (edge) {
+          var adjacentNodeId = edge.target().id() === nodeId ? edge.source().id() : edge.target().id();
+
+          if (!includedNodes.has(adjacentNodeId))
+            edges.push(edge);
+        })
+      });
+
+      return edges;
+    }
+
+    function nextStep() {
+      let availableEdges = getAvailableEdges();
+      if (availableEdges.length === 0) return;
+      let minEdge = altFindMinEdge(availableEdges);
+      let unvisitedNodeId = includedNodes.has(minEdge.source().id()) ? minEdge.target().id() : minEdge.source().id();
+      let visitedNodeId = minEdge.source().id() === unvisitedNodeId ? minEdge.target().id() : minEdge.source().id();
+      console.log(visitedNodeId + " -> " + unvisitedNodeId);
+      includedNodes.add(unvisitedNodeId);
+    }
+  }
+
+  function altFindMinEdge(edges) {
+    if (edges.length === 0) return null;
+
+    let minEdge = edges[0];
+    edges.forEach(function (edge) {
+      minEdgeWeight = minEdge.data('weight');
+      edgeWeight = edge.data('weight');
+      if (edgeWeight < minEdgeWeight || (edgeWeight === minEdgeWeight && edge.source() + edge.target() < minEdge.source() + minEdge.target()))
+        minEdge = edge;
+    });
+    return minEdge;
   }
 
   function runPrimAlgorithmFromNode(startNodeId) {
@@ -309,7 +356,7 @@ function guardarPeso() {
             }, 1000);
           } else {
             //primStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
-            rimStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
+            primStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
             edgesInMST.forEach(function (edge) {
               primStepsDiv.innerHTML += `Arista ${edge.source} - ${edge.target}<br>`;
             });
@@ -345,6 +392,7 @@ function guardarPeso() {
 
     cy.nodes().forEach(function (node) {
       var nodeId = node.id();
+      //Elementos adyacentes al nodo
       adjacencyList[nodeId] = [];
 
       node.connectedEdges().forEach(function (edge) {
@@ -358,30 +406,30 @@ function guardarPeso() {
   }
 
   function findMinEdge(adjacencyList, includedNodes) {
-  var minEdge = null;
+    var minEdge = null;
 
-  includedNodes.forEach(function (nodeId) {
-    var edges = adjacencyList[nodeId];
+    includedNodes.forEach(function (nodeId) {
+      var edges = adjacencyList[nodeId];
 
-    edges.forEach(function (edge) {
-      if (!includedNodes.has(edge.target) && (!minEdge || edge.weight < minEdge.weight || (edge.weight === minEdge.weight && edge.source + edge.target < minEdge.source + minEdge.target))) {
-        minEdge = { source: nodeId, target: edge.target, weight: edge.weight };
-      }
+      edges.forEach(function (edge) {
+        if (!includedNodes.has(edge.target) && (!minEdge || edge.weight < minEdge.weight || (edge.weight === minEdge.weight && edge.source + edge.target < minEdge.source + minEdge.target))) {
+          minEdge = { source: nodeId, target: edge.target, weight: edge.weight };
+        }
+      });
     });
-  });
 
-  return minEdge;
-}
+    return minEdge;
+  }
 
   function showMST(edgesInMST) {
     cy.edges().removeClass('mst');
-  
+
     edgesInMST.forEach(function (edge) {
       cy.getElementById(edge.source + edge.target).addClass('mst');
       cy.getElementById(edge.target + edge.source).addClass('mst');
     });
   }
-  
+
 
   // Event listeners
   document.getElementById('edgeWeightButton').addEventListener('click', guardarPeso);
