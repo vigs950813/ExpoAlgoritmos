@@ -35,6 +35,17 @@ nav {
   width: 100%;
 }
 
+.navbar{
+  background-color: #E9E9E9;
+}
+
+.navbar-brand>h2 {
+  font-family: "Inconsolata";
+  font-size: 30px;
+  font-weight: bold;
+}
+
+
 .navbar.navbar-expand-lg {
   background-color: rgba(0, 116, 255, 1);
 }
@@ -139,6 +150,22 @@ body {
 }
 
 #primSteps {
+  flex: 0 0 40%; /* 40% de la altura, no se puede expandir ni contraer */
+  padding: 10px;
+  border: solid black 2px;
+  overflow-y: scroll;
+  box-sizing: border-box;
+}
+
+#kruskalSteps {
+  flex: 0 0 40%; /* 40% de la altura, no se puede expandir ni contraer */
+  padding: 10px;
+  border: solid black 2px;
+  overflow-y: scroll;
+  box-sizing: border-box;
+}
+
+#dijkstraSteps {
   flex: 0 0 40%; /* 40% de la altura, no se puede expandir ni contraer */
   padding: 10px;
   border: solid black 2px;

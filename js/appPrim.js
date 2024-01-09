@@ -296,7 +296,9 @@ function guardarPeso() {
 
           edgesInMST.push(minEdge);
 
-          primStepsDiv.innerHTML += `Paso ${includedNodes.size}: Agregar arista ${minEdge.source} - ${minEdge.target} al MST<br>`;
+          //primStepsDiv.innerHTML += `${includedNodes.size}: Arista seleccionada ${minEdge.source} - ${minEdge.target} <br>`;
+
+          primStepsDiv.innerHTML += `Paso ${includedNodes.size}: Agregar arista ${minEdge.source} - ${minEdge.target} <br>`;
 
           showMST(edgesInMST);
 
@@ -306,7 +308,8 @@ function guardarPeso() {
               runNextStep();
             }, 1000);
           } else {
-            primStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final del MST:<br>';
+            //primStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
+            rimStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
             edgesInMST.forEach(function (edge) {
               primStepsDiv.innerHTML += `Arista ${edge.source} - ${edge.target}<br>`;
             });
@@ -355,30 +358,30 @@ function guardarPeso() {
   }
 
   function findMinEdge(adjacencyList, includedNodes) {
-    var minEdge = null;
+  var minEdge = null;
 
-    cy.nodes().forEach(function (node) {
-      if (includedNodes.has(node.id())) {
-        var edges = adjacencyList[node.id()];
+  includedNodes.forEach(function (nodeId) {
+    var edges = adjacencyList[nodeId];
 
-        edges.forEach(function (edge) {
-          if (!includedNodes.has(edge.target) && (!minEdge || edge.weight < minEdge.weight)) {
-            minEdge = { source: node.id(), target: edge.target, weight: edge.weight };
-          }
-        });
+    edges.forEach(function (edge) {
+      if (!includedNodes.has(edge.target) && (!minEdge || edge.weight < minEdge.weight || (edge.weight === minEdge.weight && edge.source + edge.target < minEdge.source + minEdge.target))) {
+        minEdge = { source: nodeId, target: edge.target, weight: edge.weight };
       }
     });
+  });
 
-    return minEdge;
-  }
+  return minEdge;
+}
 
   function showMST(edgesInMST) {
     cy.edges().removeClass('mst');
-
+  
     edgesInMST.forEach(function (edge) {
       cy.getElementById(edge.source + edge.target).addClass('mst');
+      cy.getElementById(edge.target + edge.source).addClass('mst');
     });
   }
+  
 
   // Event listeners
   document.getElementById('edgeWeightButton').addEventListener('click', guardarPeso);
