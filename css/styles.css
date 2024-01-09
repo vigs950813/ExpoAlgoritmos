@@ -14,7 +14,7 @@ header .centerColText3 {
   font-family: "Inconsolata";
   color: white;
   font-weight: bold;
-  font-size: 15px; /* Reducir el tamaño de fuente */
+  font-size: 30px; /* Reducir el tamaño de fuente */
   margin-bottom: 5px; /* Agregar margen inferior */
 }
 
@@ -211,6 +211,13 @@ body {
   color: black;
   background: rgb(1, 42, 91);
   background: linear-gradient(180deg, rgba(1, 42, 91, 1) 0%, rgba(0, 116, 255, 1) 100%);
+}
+
+.text-center{
+  font-family: "Inconsolata";
+  font-size: 30px;
+  font-weight: bold;
+  color: white;
 }
 
 /* Estilos para la descripción */
