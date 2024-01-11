@@ -274,9 +274,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
   function altRunPrimFromNode(startNodeId) {
-    var primStepsDiv = document.getElementById('primSteps');
+    let primStepsDiv = document.getElementById('primSteps');
     primStepsDiv.innerHTML = '';
 
+    let edgesInMST = [];
     let includedNodes = new Set();
     includedNodes.add(startNodeId);
 
@@ -285,10 +286,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
       includedNodes.forEach(function (nodeId) {
         cy.getElementById(nodeId).connectedEdges().forEach(function (edge) {
-          var adjacentNodeId = edge.target().id() === nodeId ? edge.source().id() : edge.target().id();
+          let _edge = { "source": edge.source().id(), "target": edge.target().id(), "weight": edge.data("weight") };
+          var adjacentNodeId = _edge.target === nodeId ? _edge.source : _edge.target;
 
           if (!includedNodes.has(adjacentNodeId))
-            edges.push(edge);
+            edges.push(_edge);
         })
       });
 
@@ -297,13 +299,47 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function nextStep() {
       let availableEdges = getAvailableEdges();
-      if (availableEdges.length === 0) return;
+      if (availableEdges.length === 0)
+        return;
+
       let minEdge = altFindMinEdge(availableEdges);
-      let unvisitedNodeId = includedNodes.has(minEdge.source().id()) ? minEdge.target().id() : minEdge.source().id();
-      let visitedNodeId = minEdge.source().id() === unvisitedNodeId ? minEdge.target().id() : minEdge.source().id();
-      console.log(visitedNodeId + " -> " + unvisitedNodeId);
-      includedNodes.add(unvisitedNodeId);
+      cy.getElementById(minEdge.source + minEdge.target).addClass('considering-edge');
+
+      setTimeout(() => {
+        cy.getElementById(minEdge.source + minEdge.target).removeClass('considering-edge');
+        cy.getElementById(minEdge.source + minEdge.target).addClass('mst');
+        edgesInMST.push(minEdge);
+
+        let unvisitedNodeId = includedNodes.has(minEdge.source) ? minEdge.target : minEdge.source;
+        let visitedNodeId = minEdge.source === unvisitedNodeId ? minEdge.target : minEdge.source;
+        primStepsDiv.innerHTML += `Paso ${includedNodes.size}: Agregar arista ${visitedNodeId} - ${unvisitedNodeId} <br>`;
+        console.log(visitedNodeId + " -> " + unvisitedNodeId);
+        includedNodes.add(unvisitedNodeId);
+
+        showMST(edgesInMST);
+
+        if (includedNodes.size < cy.nodes().length) {
+          setTimeout(() => {
+            cy.getElementById(minEdge.source + minEdge.target).removeClass('mst');
+            nextStep();
+          }, 1000);
+        } else {
+          primStepsDiv.innerHTML += '<b>Resultado final:</b><br>';
+          edgesInMST.forEach(function (edge) {
+            primStepsDiv.innerHTML += `Arista ${edge.source} - ${edge.target}<br>`;
+          });
+
+          cy.edges().forEach(function (edge) {
+            if (!edgesInMST.some(e => e.source === edge.source().id() && e.target === edge.target().id())) {
+              edge.addClass('not-in-mst');
+            }
+          });
+        }
+      }, 1000);
+
     }
+
+    nextStep();
   }
 
   function altFindMinEdge(edges) {
@@ -311,9 +347,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let minEdge = edges[0];
     edges.forEach(function (edge) {
-      minEdgeWeight = minEdge.data('weight');
-      edgeWeight = edge.data('weight');
-      if (edgeWeight < minEdgeWeight || (edgeWeight === minEdgeWeight && edge.source() + edge.target() < minEdge.source() + minEdge.target()))
+      if (edge.weight < minEdge.weight || (edge.weight === minEdge.weight && edge.source + edge.target < minEdge.source + minEdge.target))
         minEdge = edge;
     });
     return minEdge;
