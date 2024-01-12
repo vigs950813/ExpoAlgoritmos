@@ -149,6 +149,14 @@ body {
   box-sizing: border-box;
 }
 
+#algorithmSteps {
+  flex: 0 0 40%; /* 40% de la altura, no se puede expandir ni contraer */
+  padding: 10px;
+  border: solid black 2px;
+  overflow-y: scroll;
+  box-sizing: border-box;
+}
+
 #primSteps {
   flex: 0 0 40%; /* 40% de la altura, no se puede expandir ni contraer */
   padding: 10px;

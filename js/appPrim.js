@@ -255,26 +255,107 @@ function guardarPeso() {
     containerError.classList.remove("alert", "alert-danger");
     inputError.classList.remove("is-invalid");
   }
-//_________________________________________Funciones de ALgoritmo Prim______________________________________--
+  //_________________________________________Funciones de ALgoritmo Prim______________________________________--
   // Lógica del algoritmo de Prim
   function runPrimAlgorithm() {
     var startNodeId = document.getElementById('startNodeId').value.trim().toUpperCase();
     var startNodeIdInput = document.getElementById('startNodeId');
-    clearError(errorContainer,startNodeIdInput);
+    clearError(errorContainer, startNodeIdInput);
     if (cy.getElementById(startNodeId).nonempty()) {
       cy.edges().removeClass('mst');
       cy.edges().removeClass('not-in-mst');
-      runPrimAlgorithmFromNode(startNodeId);
+      altRunPrimFromNode(startNodeId);
     } else {
 
-      showError("El nodo de inicio no existe en el grafo.",errorContainer,startNodeIdInput);
+      showError("El nodo de inicio no existe en el grafo.", errorContainer, startNodeIdInput);
     }
-    
+
+  }
+
+
+  function altRunPrimFromNode(startNodeId) {
+    let algorithmStepsDiv = document.getElementById('algorithmSteps');
+    algorithmStepsDiv.innerHTML = '';
+
+    let edgesInMST = [];
+    let includedNodes = new Set();
+    includedNodes.add(startNodeId);
+
+    function getAvailableEdges() {
+      var edges = [];
+
+      includedNodes.forEach(function (nodeId) {
+        cy.getElementById(nodeId).connectedEdges().forEach(function (edge) {
+          let _edge = { "source": edge.source().id(), "target": edge.target().id(), "weight": edge.data("weight") };
+          var adjacentNodeId = _edge.target === nodeId ? _edge.source : _edge.target;
+
+          if (!includedNodes.has(adjacentNodeId))
+            edges.push(_edge);
+        })
+      });
+
+      return edges;
+    }
+
+    function nextStep() {
+      let availableEdges = getAvailableEdges();
+      if (availableEdges.length === 0)
+        return;
+
+      let minEdge = altFindMinEdge(availableEdges);
+      cy.getElementById(minEdge.source + minEdge.target).addClass('considering-edge');
+
+      setTimeout(() => {
+        cy.getElementById(minEdge.source + minEdge.target).removeClass('considering-edge');
+        cy.getElementById(minEdge.source + minEdge.target).addClass('mst');
+        edgesInMST.push(minEdge);
+
+        let unvisitedNodeId = includedNodes.has(minEdge.source) ? minEdge.target : minEdge.source;
+        let visitedNodeId = minEdge.source === unvisitedNodeId ? minEdge.target : minEdge.source;
+        algorithmStepsDiv.innerHTML += `Paso ${includedNodes.size}: Agregar arista ${visitedNodeId} - ${unvisitedNodeId} <br>`;
+        console.log(visitedNodeId + " -> " + unvisitedNodeId);
+        includedNodes.add(unvisitedNodeId);
+
+        showMST(edgesInMST);
+
+        if (includedNodes.size < cy.nodes().length) {
+          setTimeout(() => {
+            cy.getElementById(minEdge.source + minEdge.target).removeClass('mst');
+            nextStep();
+          }, 1000);
+        } else {
+          algorithmStepsDiv.innerHTML += '<b>Resultado final:</b><br>';
+          edgesInMST.forEach(function (edge) {
+            algorithmStepsDiv.innerHTML += `Arista ${edge.source} - ${edge.target}<br>`;
+          });
+
+          cy.edges().forEach(function (edge) {
+            if (!edgesInMST.some(e => e.source === edge.source().id() && e.target === edge.target().id())) {
+              edge.addClass('not-in-mst');
+            }
+          });
+        }
+      }, 1000);
+
+    }
+
+    nextStep();
+  }
+
+  function altFindMinEdge(edges) {
+    if (edges.length === 0) return null;
+
+    let minEdge = edges[0];
+    edges.forEach(function (edge) {
+      if (edge.weight < minEdge.weight || (edge.weight === minEdge.weight && edge.source + edge.target < minEdge.source + minEdge.target))
+        minEdge = edge;
+    });
+    return minEdge;
   }
 
   function runPrimAlgorithmFromNode(startNodeId) {
-    var primStepsDiv = document.getElementById('primSteps');
-    primStepsDiv.innerHTML = '';
+    var algorithmStepsDiv = document.getElementById('algorithmSteps');
+    algorithmStepsDiv.innerHTML = '';
 
     var adjacencyList = getAdjacencyList();
     var includedNodes = new Set();
@@ -296,9 +377,9 @@ function guardarPeso() {
 
           edgesInMST.push(minEdge);
 
-          //primStepsDiv.innerHTML += `${includedNodes.size}: Arista seleccionada ${minEdge.source} - ${minEdge.target} <br>`;
+          //algorithmStepsDiv.innerHTML += `${includedNodes.size}: Arista seleccionada ${minEdge.source} - ${minEdge.target} <br>`;
 
-          primStepsDiv.innerHTML += `Paso ${includedNodes.size}: Agregar arista ${minEdge.source} - ${minEdge.target} <br>`;
+          algorithmStepsDiv.innerHTML += `Paso ${includedNodes.size}: Agregar arista ${minEdge.source} - ${minEdge.target} <br>`;
 
           showMST(edgesInMST);
 
@@ -308,10 +389,10 @@ function guardarPeso() {
               runNextStep();
             }, 1000);
           } else {
-            //primStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
-            rimStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
+            //algorithmStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
+            algorithmStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
             edgesInMST.forEach(function (edge) {
-              primStepsDiv.innerHTML += `Arista ${edge.source} - ${edge.target}<br>`;
+              algorithmStepsDiv.innerHTML += `Arista ${edge.source} - ${edge.target}<br>`;
             });
 
             cy.edges().forEach(function (edge) {
@@ -326,6 +407,104 @@ function guardarPeso() {
 
     runNextStep();
   }
+
+
+  function runKruskalAlgorithm() {
+    var edges = cy.edges().toArray();
+    edges.sort((a, b) => a.data('weight') - b.data('weight'));
+  
+    var algorithmStepsContainer = document.getElementById('algorithmSteps');
+    algorithmStepsContainer.innerHTML = ''; // Limpiar el contenido previo
+  
+    // Mostrar las aristas ordenadas de menor a mayor peso
+    var sortedEdgesInfo = 'Aristas ordenadas de menor a mayor peso: ';
+    edges.forEach((edge, i) => {
+      sortedEdgesInfo += `${edge.id()} (${edge.data('weight')}), `;
+    });
+    algorithmStepsContainer.innerHTML += `<p>${sortedEdgesInfo.slice(0, -2)}.</p>`;
+  
+    var index = edges.length + 1; // Incrementar el índice para mostrar el contenido después de la lista ordenada
+    var minimumSpanningTree = [];
+    var disjointSet = {};
+  
+    edges.forEach((edge, i) => {
+      var sourceNode = edge.source().id();
+      var targetNode = edge.target().id();
+  
+      if (!disjointSet[sourceNode]) disjointSet[sourceNode] = sourceNode;
+      if (!disjointSet[targetNode]) disjointSet[targetNode] = targetNode;
+  
+      // Función auxiliar para verificar si agregar la arista crea un ciclo
+      function formsCycle(source, target) {
+        return find(source) === find(target);
+      }
+  
+      var cycleCheck = formsCycle(sourceNode, targetNode);
+      setTimeout(() => {
+        // Agregar información de paso a paso al div sobre la verificación de ciclos
+        var stepCycleInfo = `Verificación de ciclo para la arista ${edge.id()}: ${cycleCheck ? 'Se descarta, ya que forma un ciclo.' : 'No forma un ciclo, se agrega.'}`;
+        algorithmStepsContainer.innerHTML += `<p>${stepCycleInfo}</p>`;
+      }, index * 1000); // Mostrar la verificación después de la selección visual
+  
+      if (!cycleCheck) {
+        union(sourceNode, targetNode);
+        minimumSpanningTree.push(edge);
+        setTimeout(() => {
+          // Cambiar el color del nodo al que pertenece la arista que no forma un ciclo
+          cy.getElementById(sourceNode).style('background-color', 'green');
+          cy.getElementById(targetNode).style('background-color', 'green');
+          // Resaltar la arista procesada visualmente
+          edge.addClass('mst');
+          // Agregar información de paso a paso al div sobre la selección de la arista
+          var stepInfo = `Paso ${i + 1}: Se selecciona la arista ${edge.id()} con peso ${edge.data('weight')}.`;
+          algorithmStepsContainer.innerHTML += `<p>${stepInfo}</p>`;
+        }, index * 1000); // Cambiar el tiempo según sea necesario
+  
+        // Resaltar visualmente las aristas seleccionadas en cy
+        setTimeout(() => {
+          edge.addClass('selected');
+        }, index * 1000);
+      } else {
+        setTimeout(() => {
+          // Cambiar el color de la arista que forma un ciclo
+          edge.style('line-color', 'red');
+          // Agregar información de paso a paso al div sobre la arista que forma un ciclo
+          var stepCycleInfo = `Paso ${i + 1}: Se descarta la arista ${edge.id()} ya que forma un ciclo.`;
+          algorithmStepsContainer.innerHTML += `<p>${stepCycleInfo}</p>`;
+        }, index * 1000); // Cambiar el tiempo según sea necesario
+      }
+  
+      index++;
+    });
+  
+    // Cambiar el color de las aristas que no se utilizaron
+    cy.edges().forEach((edge) => {
+      if (!minimumSpanningTree.includes(edge)) {
+        setTimeout(() => {
+          edge.style('line-color', 'red');
+          // Agregar información de paso a paso al div sobre la arista no utilizada
+          var unusedEdgeInfo = `Arista no utilizada: ${edge.id()}.`;
+          algorithmStepsContainer.innerHTML += `<p>${unusedEdgeInfo}</p>`;
+        }, index * 1000); // Cambiar el tiempo según sea necesario
+        index++;
+      }
+    });
+  
+    function find(node) {
+      if (disjointSet[node] !== node) {
+        disjointSet[node] = find(disjointSet[node]);
+      }
+      return disjointSet[node];
+    }
+  
+    function union(nodeA, nodeB) {
+      var rootA = find(nodeA);
+      var rootB = find(nodeB);
+      disjointSet[rootA] = rootB;
+    }
+  }
+  
+
 
   cy.style().selector('.working-node').style({
     'background-color': 'yellow'
@@ -390,5 +569,6 @@ function guardarPeso() {
   document.getElementById('saveEdgeWeightButton').addEventListener('click', editEdgeWeight);
   document.getElementById('deleteSelectedNode').addEventListener('click', deleteSelectedElement);
   document.getElementById('runPrimAlgorithmButton').addEventListener('click', runPrimAlgorithm);
+  document.getElementById('runKruskalAlgorithmButton').addEventListener('click', runKruskalAlgorithm);
 
 });
