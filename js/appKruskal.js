@@ -243,6 +243,7 @@ document.addEventListener('DOMContentLoaded', function () {
     inputError.classList.remove("is-invalid");
   }
 
+
   function runKruskalAlgorithm() {
     var edges = cy.edges().toArray();
     edges.sort((a, b) => a.data('weight') - b.data('weight'));
@@ -284,6 +285,9 @@ document.addEventListener('DOMContentLoaded', function () {
         union(sourceNode, targetNode);
         minimumSpanningTree.push(edge);
         setTimeout(() => {
+          // Cambiar el color del nodo al que pertenece la arista que no forma un ciclo
+          cy.getElementById(sourceNode).style('background-color', 'green');
+          cy.getElementById(targetNode).style('background-color', 'green');
           // Resaltar la arista procesada visualmente
           edge.addClass('mst');
           // Agregar información de paso a paso al div sobre la selección de la arista
@@ -295,7 +299,28 @@ document.addEventListener('DOMContentLoaded', function () {
         setTimeout(() => {
           edge.addClass('selected');
         }, index * 1000);
+      } else {
+        setTimeout(() => {
+          // Cambiar el color de la arista que forma un ciclo
+          edge.style('line-color', 'red');
+          // Agregar información de paso a paso al div sobre la arista que forma un ciclo
+          var stepCycleInfo = `Paso ${i + 1}: Se descarta la arista ${edge.id()} ya que forma un ciclo.`;
+          kruskalStepsContainer.innerHTML += `<p>${stepCycleInfo}</p>`;
+        }, index * 1000); // Cambiar el tiempo según sea necesario
+      }
   
+      index++;
+    });
+  
+    // Cambiar el color de las aristas que no se utilizaron
+    cy.edges().forEach((edge) => {
+      if (!minimumSpanningTree.includes(edge)) {
+        setTimeout(() => {
+          edge.style('line-color', 'red');
+          // Agregar información de paso a paso al div sobre la arista no utilizada
+          var unusedEdgeInfo = `Arista no utilizada: ${edge.id()}.`;
+          kruskalStepsContainer.innerHTML += `<p>${unusedEdgeInfo}</p>`;
+        }, index * 1000); // Cambiar el tiempo según sea necesario
         index++;
       }
     });
@@ -313,9 +338,6 @@ document.addEventListener('DOMContentLoaded', function () {
       disjointSet[rootA] = rootB;
     }
   }
-  
-  
-  
   
   
   document.getElementById('edgeWeightButton').addEventListener('click', guardarPeso);
