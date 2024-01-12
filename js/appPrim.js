@@ -277,6 +277,9 @@ document.addEventListener('DOMContentLoaded', function () {
     let primStepsDiv = document.getElementById('primSteps');
     primStepsDiv.innerHTML = '';
 
+    
+    let graph = new Graph(startNodeId);
+
     let edgesInMST = [];
     let includedNodes = new Set();
     includedNodes.add(startNodeId);
@@ -286,7 +289,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
       includedNodes.forEach(function (nodeId) {
         cy.getElementById(nodeId).connectedEdges().forEach(function (edge) {
-          let _edge = { "source": edge.source().id(), "target": edge.target().id(), "weight": edge.data("weight") };
+          // let _edge = { "source": edge.source().id(), "target": edge.target().id(), "weight": edge.data("weight") };
+          let _edge = new Edge(edge.source().id(), edge.target().id(), edge.data("weight"));
           var adjacentNodeId = _edge.target === nodeId ? _edge.source : _edge.target;
 
           if (!includedNodes.has(adjacentNodeId))
@@ -298,11 +302,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function nextStep() {
+      //Identificar las aristas disponibles
       let availableEdges = getAvailableEdges();
       if (availableEdges.length === 0)
         return;
+      graph.setAvailableEdges(availableEdges);
+      console.log(graph.lastStateToString());
 
+      //Obtener la aristas de menor peso
       let minEdge = altFindMinEdge(availableEdges);
+      graph.setSelectedEdges([minEdge]);
+      console.log(graph.lastStateToString());
+
+
       cy.getElementById(minEdge.source + minEdge.target).addClass('considering-edge');
 
       setTimeout(() => {
@@ -310,13 +322,23 @@ document.addEventListener('DOMContentLoaded', function () {
         cy.getElementById(minEdge.source + minEdge.target).addClass('mst');
         edgesInMST.push(minEdge);
 
+        graph.addUsedEdge(minEdge);
+        console.log(graph.lastStateToString());
+
         let unvisitedNodeId = includedNodes.has(minEdge.source) ? minEdge.target : minEdge.source;
         let visitedNodeId = minEdge.source === unvisitedNodeId ? minEdge.target : minEdge.source;
         primStepsDiv.innerHTML += `Paso ${includedNodes.size}: Agregar arista ${visitedNodeId} - ${unvisitedNodeId} <br>`;
-        console.log(visitedNodeId + " -> " + unvisitedNodeId);
+
+
+        graph.addVisitedNode(unvisitedNodeId);
+        console.log(graph.lastStateToString());
+
         includedNodes.add(unvisitedNodeId);
 
         showMST(edgesInMST);
+
+        graph.pushClearState();
+        console.log(graph.lastStateToString());
 
         if (includedNodes.size < cy.nodes().length) {
           setTimeout(() => {
@@ -336,7 +358,6 @@ document.addEventListener('DOMContentLoaded', function () {
           });
         }
       }, 1000);
-
     }
 
     nextStep();
