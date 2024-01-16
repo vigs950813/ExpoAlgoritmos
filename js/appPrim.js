@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
           'line-color': ' #212121',
           'target-arrow-color': '#ccc',
           'target-arrow-shape': 'triangle',
-          'label': 'data(weight)'
+          'label': 'data(weight)',
         }
       },
       // Estilos adicionales
@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function () {
   cy.on('tap', 'node', function (event) {
     cy.nodes().removeClass('working-node');
     cy.edges().removeClass('considering-edge');
-    cy.edges().removeClass('not-in-mst');
+    // cy.edges().removeClass('not-in-mst');
   });
 
   // Función para guardar el peso de la arista
@@ -239,6 +239,7 @@ document.addEventListener('DOMContentLoaded', function () {
       } else {
         // La arista no existe en ninguna dirección, agrégala al grafo
         cy.add({ data: { id: edgeId1, source: selectedNodeId, target: node.id(), weight: edgeWeight } });
+        cy.edges().getElementById(edgeId1).addClass('not-in-mst');
       }
 
       // Guardar el ID de la arista recién creada o actualizada
@@ -467,8 +468,8 @@ document.addEventListener('DOMContentLoaded', function () {
         minimumSpanningTree.push(edge);
         setTimeout(() => {
           // Cambiar el color del nodo al que pertenece la arista que no forma un ciclo
-          cy.getElementById(sourceNode).style('background-color', 'green');
-          cy.getElementById(targetNode).style('background-color', 'green');
+          cy.getElementById(sourceNode).addClass('visited-node');
+          cy.getElementById(targetNode).addClass('visited-node');
           // Resaltar la arista procesada visualmente
           edge.addClass('mst');
           // Agregar información de paso a paso al div sobre la selección de la arista
@@ -483,7 +484,7 @@ document.addEventListener('DOMContentLoaded', function () {
       } else {
         setTimeout(() => {
           // Cambiar el color de la arista que forma un ciclo
-          edge.style('line-color', 'red');
+          edge.addClass('not-in-mst');
           // Agregar información de paso a paso al div sobre la arista que forma un ciclo
           var stepCycleInfo = `Paso ${i + 1}: Se descarta la arista ${edge.id()} ya que forma un ciclo.`;
           algorithmStepsContainer.innerHTML += `<p>${stepCycleInfo}</p>`;
@@ -497,7 +498,7 @@ document.addEventListener('DOMContentLoaded', function () {
     cy.edges().forEach((edge) => {
       if (!minimumSpanningTree.includes(edge)) {
         setTimeout(() => {
-          edge.style('line-color', 'red');
+          edge.addClass('not-in-mst');
           // Agregar información de paso a paso al div sobre la arista no utilizada
           var unusedEdgeInfo = `Arista no utilizada: ${edge.id()}.`;
           algorithmStepsContainer.innerHTML += `<p>${unusedEdgeInfo}</p>`;

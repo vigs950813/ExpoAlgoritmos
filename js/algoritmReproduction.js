@@ -53,7 +53,10 @@ function showStateAt(stateIndex) {
     algorithmStepsDiv.innerHTML += "<b>Fin del algoritmo</b>";
 
   cy.nodes().removeClass('visited-node');
+
+  cy.edges().addClass('not-in-mst');
   cy.edges().removeClass('mst');
+  cy.edges().removeClass('selected');
   cy.edges().removeClass('selected-edge');
   cy.edges().removeClass('available-edge');
 
@@ -62,10 +65,14 @@ function showStateAt(stateIndex) {
       edge.addClass('mst');
       edge.removeClass('not-in-mst');
     }
-    else if (currentState.selectedEdges.some((selectedEdge) => selectedEdge.id === edge.id()))
+    else if (currentState.selectedEdges.some((selectedEdge) => selectedEdge.id === edge.id())) {
       edge.addClass('selected-edge');
-    else if (currentState.availableEdges.some((availableEdge) => availableEdge.id === edge.id()))
+      edge.removeClass('not-in-mst');
+    }
+    else if (currentState.availableEdges.some((availableEdge) => availableEdge.id === edge.id())) {
       edge.addClass('available-edge');
+      edge.removeClass('not-in-mst');
+    }
 
   });
 
