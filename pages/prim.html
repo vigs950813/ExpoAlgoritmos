@@ -96,19 +96,19 @@
             </li>
 
             <!-- Enlace a la página de Prim (activa) -->
-        <!--    <li class="nav-item">
+            <!--    <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="prim.html"
                 >Prim</a
               >
             </li>-->
 
             <!-- Enlace a la página de Kruskal -->
-           <!-- <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link" href="kruskal.html">Kruskal</a>
             </li>-->
 
             <!-- Enlace a la página de Dijkstra -->
-           <!-- <li class="nav-item">
+            <!-- <li class="nav-item">
               <a class="nav-link" href="dijkstra.html">Dijkstra</a>
             </li>-->
           </ul>
@@ -123,7 +123,7 @@
         <div class="navbar-brand"><h2>Algoritmos</h2></div>
 
         <!-- Formulario de interacción con el grafo -->
-        <form class="d-flex">
+        <form class="d-flex flex-row mb-3">
           <!-- Entrada de texto para el nombre del nuevo nodo -->
           <input
             type="text"
@@ -170,31 +170,31 @@
             required
           />
 
-          <!-- Botónes para ejecutar los diferentes algoritmos -->
+          <!-- Reemplaza los botones con un menú desplegable -->
+          <div class="form-control me-1">
+            <div class="input-group">
+              <select
+                id="algorithmSelect"
+                class="form-select form-select-lg mb-3"
+                aria-label="Large select example"
+              >
+                <option value="" disabled selected>
+                  Selecciona un algoritmo
+                </option>
+                <option value="prim">Algoritmo de Prim</option>
+                <option value="kruskal">Algoritmo de Kruskal</option>
+                <option value="dijkstra">Algoritmo de Dijkstra</option>
+              </select>
+            </div>
+          </div>
+          <!-- Botón para ejecutar algoritmo seleccionado-->
           <button
             class="btn btn-outline-success"
             type="button"
-            id="runPrimAlgorithmButton"
+            id="runAlgoritmo"
           >
-            Ejecutar Algoritmo de Prim
+            Ejecutar Algoritmo
           </button>
-
-          <button
-            class="btn btn-outline-success"
-            type="button"
-            id="runKruskalAlgorithmButton"
-          >
-            Ejecutar Algoritmo de Kruskal
-          </button>
-          <button
-          class="btn btn-outline-success"
-          type="button"
-          id="rundijkstraAlgorithmButton"
-        >
-          Ejecutar Algoritmo de Dijkstra
-        </button>
-
-
         </form>
       </div>
     </section>
@@ -208,11 +208,15 @@
         <!-- Contenedor para el grafo -->
         <div id="cy">
           <div id="steps-buttons">
-            <button id="replay-btn"><img src="../images/icon_replay.svg"/></button>
-            <button id="prev-btn"><img src="../images/icon_prev.svg"/></button>
-            <button id="play-btn"><img src="../images/icon_play.svg"/></button>
-            <button id="pause-btn"><img src="../images/icon_pause.svg"/></button>
-            <button id="next-btn"><img src="../images/icon_next.svg"/></button>
+            <button id="replay-btn">
+              <img src="../images/icon_replay.svg" />
+            </button>
+            <button id="prev-btn"><img src="../images/icon_prev.svg" /></button>
+            <button id="play-btn"><img src="../images/icon_play.svg" /></button>
+            <button id="pause-btn">
+              <img src="../images/icon_pause.svg" />
+            </button>
+            <button id="next-btn"><img src="../images/icon_next.svg" /></button>
           </div>
         </div>
 
