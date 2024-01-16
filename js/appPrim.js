@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
         selector: 'edge',
         style: {
           'width': 2,
-          'line-color': '#ccc',
+          'line-color': ' #212121',
           'target-arrow-color': '#ccc',
           'target-arrow-shape': 'triangle',
           'label': 'data(weight)'

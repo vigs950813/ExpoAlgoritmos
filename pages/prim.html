@@ -29,7 +29,7 @@
     />
 
     <!-- Título de la página -->
-    <title>Análisis y diseño de algoritmos Prim</title>
+    <title>Análisis y diseño de algoritmos</title>
   </head>
 
   <body>
@@ -96,21 +96,21 @@
             </li>
 
             <!-- Enlace a la página de Prim (activa) -->
-            <li class="nav-item">
+        <!--    <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="prim.html"
                 >Prim</a
               >
-            </li>
+            </li>-->
 
             <!-- Enlace a la página de Kruskal -->
-            <li class="nav-item">
+           <!-- <li class="nav-item">
               <a class="nav-link" href="kruskal.html">Kruskal</a>
-            </li>
+            </li>-->
 
             <!-- Enlace a la página de Dijkstra -->
-            <li class="nav-item">
+           <!-- <li class="nav-item">
               <a class="nav-link" href="dijkstra.html">Dijkstra</a>
-            </li>
+            </li>-->
           </ul>
         </div>
       </div>
@@ -120,7 +120,7 @@
     <section class="navbar">
       <div class="container-fluid">
         <!-- Título de la sección -->
-        <div class="navbar-brand"><h2>Algoritmo de Prim</h2></div>
+        <div class="navbar-brand"><h2>Algoritmos</h2></div>
 
         <!-- Formulario de interacción con el grafo -->
         <form class="d-flex">
@@ -170,7 +170,7 @@
             required
           />
 
-          <!-- Botón para ejecutar el algoritmo de Prim -->
+          <!-- Botónes para ejecutar los diferentes algoritmos -->
           <button
             class="btn btn-outline-success"
             type="button"
@@ -186,7 +186,13 @@
           >
             Ejecutar Algoritmo de Kruskal
           </button>
-
+          <button
+          class="btn btn-outline-success"
+          type="button"
+          id="rundijkstraAlgorithmButton"
+        >
+          Ejecutar Algoritmo de Dijkstra
+        </button>
 
 
         </form>
@@ -194,7 +200,7 @@
     </section>
 
     <!-- Contenedor para mensajes de error -->
-    <div id="errorContainer" class="container mt-3"></div>
+    <div id="errorContainer" class="container mt-3 text-black"></div>
 
     <!-- Sección principal de la página con el grafo -->
     <section class="section2">
@@ -250,7 +256,7 @@
           </div>
 
           <!-- Contenedor para mensajes de error en el peso de la arista -->
-          <div id="edgeWeightError" class="container mt-3"></div>
+          <div id="edgeWeightError" class="container mt-3 text-black"></div>
 
           <div class="modal-footer">
             <!-- Botón para guardar el peso de la arista -->
