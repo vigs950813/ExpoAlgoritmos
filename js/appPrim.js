@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
           'line-color': ' #212121',
           'target-arrow-color': '#ccc',
           'target-arrow-shape': 'triangle',
-          'label': 'data(weight)'
+          'label': 'data(weight)',
         }
       },
       // Estilos adicionales
@@ -167,13 +167,13 @@ document.addEventListener('DOMContentLoaded', function () {
   // });
 
   // Manejar clic en un área vacía del grafo para limpiar la selección
-  // cy.on('tap', function (event) {
-  //   if (event.target === cy) {
-  //     cy.nodes().removeClass('selected');
-  //     selectedNodeId = null;
-  //     selectedEdgeId = null;
-  //   }
-  // });
+  cy.on('tap', function (event) {
+    if (event.target === cy) {
+      cy.nodes().removeClass('selected');
+      selectedNodeId = null;
+      selectedEdgeId = null;
+    }
+  });
 
   // Restablecer estilos al hacer clic en una arista
   // cy.on('tap', 'edge', function (event) {
@@ -209,7 +209,7 @@ document.addEventListener('DOMContentLoaded', function () {
   cy.on('tap', 'node', function (event) {
     cy.nodes().removeClass('working-node');
     cy.edges().removeClass('considering-edge');
-    cy.edges().removeClass('not-in-mst');
+    // cy.edges().removeClass('not-in-mst');
   });
 
   // Función para guardar el peso de la arista
@@ -239,6 +239,7 @@ document.addEventListener('DOMContentLoaded', function () {
       } else {
         // La arista no existe en ninguna dirección, agrégala al grafo
         cy.add({ data: { id: edgeId1, source: selectedNodeId, target: node.id(), weight: edgeWeight } });
+        cy.edges().getElementById(edgeId1).addClass('not-in-mst');
       }
 
       // Guardar el ID de la arista recién creada o actualizada
@@ -376,6 +377,7 @@ document.addEventListener('DOMContentLoaded', function () {
         calculateNextStep();
     }
 
+<<<<<<< HEAD
 
     function showNextState(stateIndex) {
       if (stateIndex >= descriptions.length) {
@@ -409,10 +411,10 @@ document.addEventListener('DOMContentLoaded', function () {
       setTimeout(() => showNextState(stateIndex + 1), 1000);
     }
 
+=======
+>>>>>>> 9a44e1ab621b6c1230c9099df0273235810b1f5b
     calculateNextStep();
 
-    // let descriptions = graph.getStepsDescriptions();
-    // showNextState(0);
     startReproduction(cy, graph.states, graph.getStepsDescriptions());
   }
 
@@ -438,60 +440,60 @@ document.addEventListener('DOMContentLoaded', function () {
     return [edgeToUse, minEdges];
   }
 
-  function runPrimAlgorithmFromNode(startNodeId) {
-    var algorithmStepsDiv = document.getElementById('algorithmSteps');
-    algorithmStepsDiv.innerHTML = '';
+  // function runPrimAlgorithmFromNode(startNodeId) {
+  //   var algorithmStepsDiv = document.getElementById('algorithmSteps');
+  //   algorithmStepsDiv.innerHTML = '';
 
-    var adjacencyList = getAdjacencyList();
-    var includedNodes = new Set();
-    var edgesInMST = [];
+  //   var adjacencyList = getAdjacencyList();
+  //   var includedNodes = new Set();
+  //   var edgesInMST = [];
 
-    includedNodes.add(startNodeId);
+  //   includedNodes.add(startNodeId);
 
-    function runNextStep() {
-      var minEdge = findMinEdge(adjacencyList, includedNodes);
+  //   function runNextStep() {
+  //     var minEdge = findMinEdge(adjacencyList, includedNodes);
 
-      if (minEdge) {
-        cy.getElementById(minEdge.source + minEdge.target).addClass('considering-edge');
+  //     if (minEdge) {
+  //       cy.getElementById(minEdge.source + minEdge.target).addClass('considering-edge');
 
-        setTimeout(function () {
-          includedNodes.add(minEdge.target);
+  //       setTimeout(function () {
+  //         includedNodes.add(minEdge.target);
 
-          cy.getElementById(minEdge.source + minEdge.target).removeClass('considering-edge');
-          cy.getElementById(minEdge.source + minEdge.target).addClass('mst');
+  //         cy.getElementById(minEdge.source + minEdge.target).removeClass('considering-edge');
+  //         cy.getElementById(minEdge.source + minEdge.target).addClass('mst');
 
-          edgesInMST.push(minEdge);
+  //         edgesInMST.push(minEdge);
 
-          //algorithmStepsDiv.innerHTML += `${includedNodes.size}: Arista seleccionada ${minEdge.source} - ${minEdge.target} <br>`;
+  //         //algorithmStepsDiv.innerHTML += `${includedNodes.size}: Arista seleccionada ${minEdge.source} - ${minEdge.target} <br>`;
 
-          algorithmStepsDiv.innerHTML += `Paso ${includedNodes.size}: Agregar arista ${minEdge.source} - ${minEdge.target} <br>`;
+  //         algorithmStepsDiv.innerHTML += `Paso ${includedNodes.size}: Agregar arista ${minEdge.source} - ${minEdge.target} <br>`;
 
-          showMST(edgesInMST);
+  //         showMST(edgesInMST);
 
-          if (includedNodes.size < cy.nodes().length) {
-            setTimeout(function () {
-              cy.getElementById(minEdge.source + minEdge.target).removeClass('mst');
-              runNextStep();
-            }, 1000);
-          } else {
-            //algorithmStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
-            algorithmStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
-            edgesInMST.forEach(function (edge) {
-              algorithmStepsDiv.innerHTML += `Arista ${edge.source} - ${edge.target}<br>`;
-            });
+  //         if (includedNodes.size < cy.nodes().length) {
+  //           setTimeout(function () {
+  //             cy.getElementById(minEdge.source + minEdge.target).removeClass('mst');
+  //             runNextStep();
+  //           }, 1000);
+  //         } else {
+  //           //algorithmStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
+  //           algorithmStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
+  //           edgesInMST.forEach(function (edge) {
+  //             algorithmStepsDiv.innerHTML += `Arista ${edge.source} - ${edge.target}<br>`;
+  //           });
 
-            cy.edges().forEach(function (edge) {
-              if (!edgesInMST.some(e => e.source === edge.source().id() && e.target === edge.target().id())) {
-                edge.addClass('not-in-mst');
-              }
-            });
-          }
-        }, 1000);
-      }
-    }
+  //           cy.edges().forEach(function (edge) {
+  //             if (!edgesInMST.some(e => e.source === edge.source().id() && e.target === edge.target().id())) {
+  //               edge.addClass('not-in-mst');
+  //             }
+  //           });
+  //         }
+  //       }, 1000);
+  //     }
+  //   }
 
-    runNextStep();
-  }
+  //   runNextStep();
+  // }
 
 
   function runKruskalAlgorithm() {
@@ -536,8 +538,8 @@ document.addEventListener('DOMContentLoaded', function () {
         minimumSpanningTree.push(edge);
         setTimeout(() => {
           // Cambiar el color del nodo al que pertenece la arista que no forma un ciclo
-          cy.getElementById(sourceNode).style('background-color', 'green');
-          cy.getElementById(targetNode).style('background-color', 'green');
+          cy.getElementById(sourceNode).addClass('visited-node');
+          cy.getElementById(targetNode).addClass('visited-node');
           // Resaltar la arista procesada visualmente
           edge.addClass('mst');
           // Agregar información de paso a paso al div sobre la selección de la arista
@@ -552,7 +554,7 @@ document.addEventListener('DOMContentLoaded', function () {
       } else {
         setTimeout(() => {
           // Cambiar el color de la arista que forma un ciclo
-          edge.style('line-color', 'red');
+          edge.addClass('not-in-mst');
           // Agregar información de paso a paso al div sobre la arista que forma un ciclo
           var stepCycleInfo = `Paso ${i + 1}: Se descarta la arista ${edge.id()} ya que forma un ciclo.`;
           algorithmStepsContainer.innerHTML += `<p>${stepCycleInfo}</p>`;
@@ -566,7 +568,7 @@ document.addEventListener('DOMContentLoaded', function () {
     cy.edges().forEach((edge) => {
       if (!minimumSpanningTree.includes(edge)) {
         setTimeout(() => {
-          edge.style('line-color', 'red');
+          edge.addClass('not-in-mst');
           // Agregar información de paso a paso al div sobre la arista no utilizada
           var unusedEdgeInfo = `Arista no utilizada: ${edge.id()}.`;
           algorithmStepsContainer.innerHTML += `<p>${unusedEdgeInfo}</p>`;
@@ -621,36 +623,30 @@ document.addEventListener('DOMContentLoaded', function () {
     return adjacencyList;
   }
 
-  function findMinEdge(adjacencyList, includedNodes) {
-    var minEdge = null;
+  // function findMinEdge(adjacencyList, includedNodes) {
+  //   var minEdge = null;
 
-    includedNodes.forEach(function (nodeId) {
-      var edges = adjacencyList[nodeId];
+  //   includedNodes.forEach(function (nodeId) {
+  //     var edges = adjacencyList[nodeId];
 
-      edges.forEach(function (edge) {
-        if (!includedNodes.has(edge.target) && (!minEdge || edge.weight < minEdge.weight || (edge.weight === minEdge.weight && edge.source + edge.target < minEdge.source + minEdge.target))) {
-          minEdge = { source: nodeId, target: edge.target, weight: edge.weight };
-        }
-      });
-    });
+  //     edges.forEach(function (edge) {
+  //       if (!includedNodes.has(edge.target) && (!minEdge || edge.weight < minEdge.weight || (edge.weight === minEdge.weight && edge.source + edge.target < minEdge.source + minEdge.target))) {
+  //         minEdge = { source: nodeId, target: edge.target, weight: edge.weight };
+  //       }
+  //     });
+  //   });
 
-    return minEdge;
-  }
+  //   return minEdge;
+  // }
 
-  function showMST(edgesInMST) {
-    cy.edges().removeClass('mst');
+  // function showMST(edgesInMST) {
+  //   cy.edges().removeClass('mst');
 
-    edgesInMST.forEach(function (edge) {
-      cy.getElementById(edge.source + edge.target).addClass('mst');
-      cy.getElementById(edge.target + edge.source).addClass('mst');
-    });
-  }
-
-  //Acciones para botones de reproduccion 
-  document.getElementById('pause-btn').addEventListener('click', () => {
-
-  });
-
+  //   edgesInMST.forEach(function (edge) {
+  //     cy.getElementById(edge.source + edge.target).addClass('mst');
+  //     cy.getElementById(edge.target + edge.source).addClass('mst');
+  //   });
+  // }
 
   // Event listeners
   document.getElementById('edgeWeightButton').addEventListener('click', guardarPeso);
@@ -658,8 +654,13 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('addNodeButton').addEventListener('click', addNode);
   document.getElementById('saveEdgeWeightButton').addEventListener('click', editEdgeWeight);
   document.getElementById('deleteSelectedNode').addEventListener('click', deleteSelectedElement);
+<<<<<<< HEAD
   //document.getElementById('runPrimAlgorithmButton').addEventListener('click', runPrimAlgorithm); ya no se ocupan por el select
   //document.getElementById('runKruskalAlgorithmButton').addEventListener('click', runKruskalAlgorithm); en el select se ven las opciones de algoritmo
 
 
+=======
+  document.getElementById('runPrimAlgorithmButton').addEventListener('click', runPrimAlgorithm);
+  document.getElementById('runKruskalAlgorithmButton').addEventListener('click', runKruskalAlgorithm);
+>>>>>>> 9a44e1ab621b6c1230c9099df0273235810b1f5b
 });
