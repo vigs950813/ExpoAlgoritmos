@@ -1,3 +1,35 @@
+@font-face {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Material Icons'), local('MaterialIcons-Regular'), url(./MaterialIcons-Regular.ttf) format('truetype');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
 /* Header styles */
 header {
   background: rgb(1, 42, 91);
@@ -158,9 +190,7 @@ body {
   left: 50%;
   transform: translate(-50%, -50%);
   display: flex;
-  gap: 5px;
   background-color: rgba(255, 255, 255, 0.5); /* Fondo semi-transparente para los botones */
-  padding: 5px;
   border-radius: 5px;
   z-index: 2;
 }
@@ -168,18 +198,29 @@ body {
 #steps-buttons button {
   background: none;
   border: none;
-  padding: 5px;
   margin: 0;
   cursor: pointer;
   border-radius: 4px;
 }
 
-#steps-buttons button:hover {
+#steps-buttons button.disabled {
+  cursor: default;
+}
+
+#steps-buttons button:not(.disabled):hover {
   background-color: rgba(0, 116, 255, 0.1);
 }
 
-#steps-buttons button:active {
+#steps-buttons button:not(.disabled):active {
   background-color: rgba(0, 116, 255, 0.3);
+}
+
+span.material-icons {
+  line-height: inherit;
+}
+
+#steps-buttons button.disabled span.material-icons {
+  color: rgba(117, 117, 117, 0.767);
 }
 
 #algorithmSteps {
