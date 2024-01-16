@@ -377,42 +377,6 @@ document.addEventListener('DOMContentLoaded', function () {
         calculateNextStep();
     }
 
-<<<<<<< HEAD
-
-    function showNextState(stateIndex) {
-      if (stateIndex >= descriptions.length) {
-        algorithmStepsDiv.innerHTML += "<b>Fin del algoritmo</b>";
-        return;
-      }
-
-      let currentState = graph.states[stateIndex];
-      algorithmStepsDiv.innerHTML += descriptions[stateIndex];
-      cy.edges().removeClass('selected-edge');
-      cy.edges().removeClass('available-edge');
-
-      cy.edges().forEach(function (edge) {
-        if (currentState.usedEdges.some((usedEdge) => usedEdge.id === edge.id())) {
-          edge.addClass('mst');
-          edge.removeClass('not-in-mst');
-        }
-        else if (currentState.selectedEdges.some((selectedEdge) => selectedEdge.id === edge.id()))
-          edge.addClass('selected-edge');
-        else if (currentState.availableEdges.some((availableEdge) => availableEdge.id === edge.id()))
-          edge.addClass('available-edge');
-
-      });
-
-      cy.nodes().forEach(function (node) {
-        if (currentState.visitedNodes.includes(node.id()))
-          node.addClass('visited-node');
-        else
-          node.removeClass('visited-node');
-      });
-      setTimeout(() => showNextState(stateIndex + 1), 1000);
-    }
-
-=======
->>>>>>> 9a44e1ab621b6c1230c9099df0273235810b1f5b
     calculateNextStep();
 
     startReproduction(cy, graph.states, graph.getStepsDescriptions());
@@ -440,63 +404,15 @@ document.addEventListener('DOMContentLoaded', function () {
     return [edgeToUse, minEdges];
   }
 
-  // function runPrimAlgorithmFromNode(startNodeId) {
-  //   var algorithmStepsDiv = document.getElementById('algorithmSteps');
-  //   algorithmStepsDiv.innerHTML = '';
-
-  //   var adjacencyList = getAdjacencyList();
-  //   var includedNodes = new Set();
-  //   var edgesInMST = [];
-
-  //   includedNodes.add(startNodeId);
-
-  //   function runNextStep() {
-  //     var minEdge = findMinEdge(adjacencyList, includedNodes);
-
-  //     if (minEdge) {
-  //       cy.getElementById(minEdge.source + minEdge.target).addClass('considering-edge');
-
-  //       setTimeout(function () {
-  //         includedNodes.add(minEdge.target);
-
-  //         cy.getElementById(minEdge.source + minEdge.target).removeClass('considering-edge');
-  //         cy.getElementById(minEdge.source + minEdge.target).addClass('mst');
-
-  //         edgesInMST.push(minEdge);
-
-  //         //algorithmStepsDiv.innerHTML += `${includedNodes.size}: Arista seleccionada ${minEdge.source} - ${minEdge.target} <br>`;
-
-  //         algorithmStepsDiv.innerHTML += `Paso ${includedNodes.size}: Agregar arista ${minEdge.source} - ${minEdge.target} <br>`;
-
-  //         showMST(edgesInMST);
-
-  //         if (includedNodes.size < cy.nodes().length) {
-  //           setTimeout(function () {
-  //             cy.getElementById(minEdge.source + minEdge.target).removeClass('mst');
-  //             runNextStep();
-  //           }, 1000);
-  //         } else {
-  //           //algorithmStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
-  //           algorithmStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
-  //           edgesInMST.forEach(function (edge) {
-  //             algorithmStepsDiv.innerHTML += `Arista ${edge.source} - ${edge.target}<br>`;
-  //           });
-
-  //           cy.edges().forEach(function (edge) {
-  //             if (!edgesInMST.some(e => e.source === edge.source().id() && e.target === edge.target().id())) {
-  //               edge.addClass('not-in-mst');
-  //             }
-  //           });
-  //         }
-  //       }, 1000);
-  //     }
-  //   }
-
-  //   runNextStep();
-  // }
-
 
   function runKruskalAlgorithm() {
+    cy.nodes().removeClass('visited-node');
+    cy.edges().addClass('not-in-mst');
+    cy.edges().removeClass('mst');
+    cy.edges().removeClass('selected');
+    cy.edges().removeClass('selected-edge');
+    cy.edges().removeClass('available-edge');
+
     var edges = cy.edges().toArray();
     edges.sort((a, b) => a.data('weight') - b.data('weight'));
 
@@ -542,6 +458,7 @@ document.addEventListener('DOMContentLoaded', function () {
           cy.getElementById(targetNode).addClass('visited-node');
           // Resaltar la arista procesada visualmente
           edge.addClass('mst');
+          edge.removeClass('not-in-mst');
           // Agregar información de paso a paso al div sobre la selección de la arista
           var stepInfo = `Paso ${i + 1}: Se selecciona la arista ${edge.id()} con peso ${edge.data('weight')}.`;
           algorithmStepsContainer.innerHTML += `<p>${stepInfo}</p>`;
@@ -550,6 +467,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Resaltar visualmente las aristas seleccionadas en cy
         setTimeout(() => {
           edge.addClass('selected');
+          edge.removeClass('not-in-mst');
         }, index * 1000);
       } else {
         setTimeout(() => {
@@ -654,13 +572,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('addNodeButton').addEventListener('click', addNode);
   document.getElementById('saveEdgeWeightButton').addEventListener('click', editEdgeWeight);
   document.getElementById('deleteSelectedNode').addEventListener('click', deleteSelectedElement);
-<<<<<<< HEAD
   //document.getElementById('runPrimAlgorithmButton').addEventListener('click', runPrimAlgorithm); ya no se ocupan por el select
   //document.getElementById('runKruskalAlgorithmButton').addEventListener('click', runKruskalAlgorithm); en el select se ven las opciones de algoritmo
 
-
-=======
-  document.getElementById('runPrimAlgorithmButton').addEventListener('click', runPrimAlgorithm);
-  document.getElementById('runKruskalAlgorithmButton').addEventListener('click', runKruskalAlgorithm);
->>>>>>> 9a44e1ab621b6c1230c9099df0273235810b1f5b
 });
