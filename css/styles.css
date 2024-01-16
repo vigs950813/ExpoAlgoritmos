@@ -152,6 +152,27 @@ body {
   box-sizing: border-box;
 }
 
+#steps-buttons {
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.5); /* Fondo semi-transparente para los botones */
+  padding: 10px;
+  border-radius: 5px;
+  z-index: 2;
+}
+
+#steps-buttons button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
 #algorithmSteps {
   flex: 0 0 40%; /* 40% de la altura, no se puede expandir ni contraer */
   padding: 10px;

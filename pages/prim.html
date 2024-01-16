@@ -200,7 +200,15 @@
     <section class="section2">
       <div id="cy-container">
         <!-- Contenedor para el grafo -->
-        <div id="cy"></div>
+        <div id="cy">
+          <div id="steps-buttons">
+            <button id="replay-btn"><img src="../images/icon_replay.svg"/></button>
+            <button id="prev-btn"><img src="../images/icon_prev.svg"/></button>
+            <button id="play-btn"><img src="../images/icon_play.svg"/></button>
+            <button id="pause-btn"><img src="../images/icon_pause.svg"/></button>
+            <button id="next-btn"><img src="../images/icon_next.svg"/></button>
+          </div>
+        </div>
 
         <!-- Contenedor para los pasos del algoritmo de Prim -->
         <div id="algorithmSteps"></div>
@@ -325,6 +333,7 @@
       crossorigin="anonymous"
     ></script>
     <script src="../js/appPrim.js"></script>
+    <script src="../js/algoritmReproduction.js"></script>
     <script src="../js/classes/edge.js"></script>
     <script src="../js/classes/state.js"></script>
     <script src="../js/classes/graph.js"></script>

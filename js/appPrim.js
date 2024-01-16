@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function () {
   // Declaración de variables
   var cy = initializeCytoscape();
@@ -375,8 +376,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     calculateNextStep();
-    let descriptions = graph.getStepsDescriptions();
-    showNextState(0);
+
+    // let descriptions = graph.getStepsDescriptions();
+    // showNextState(0);
+    startReproduction(cy, graph.states, graph.getStepsDescriptions());
   }
 
   function altFindMinEdges(edges) {
@@ -609,6 +612,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  //Acciones para botones de reproduccion 
+  document.getElementById('pause-btn').addEventListener('click', () => {
+
+  });
+
 
   // Event listeners
   document.getElementById('edgeWeightButton').addEventListener('click', guardarPeso);
@@ -618,5 +626,6 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('deleteSelectedNode').addEventListener('click', deleteSelectedElement);
   document.getElementById('runPrimAlgorithmButton').addEventListener('click', runPrimAlgorithm);
   document.getElementById('runKruskalAlgorithmButton').addEventListener('click', runKruskalAlgorithm);
+  
 
 });
