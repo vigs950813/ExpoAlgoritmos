@@ -167,13 +167,13 @@ document.addEventListener('DOMContentLoaded', function () {
   // });
 
   // Manejar clic en un área vacía del grafo para limpiar la selección
-  // cy.on('tap', function (event) {
-  //   if (event.target === cy) {
-  //     cy.nodes().removeClass('selected');
-  //     selectedNodeId = null;
-  //     selectedEdgeId = null;
-  //   }
-  // });
+  cy.on('tap', function (event) {
+    if (event.target === cy) {
+      cy.nodes().removeClass('selected');
+      selectedNodeId = null;
+      selectedEdgeId = null;
+    }
+  });
 
   // Restablecer estilos al hacer clic en una arista
   // cy.on('tap', 'edge', function (event) {
@@ -342,43 +342,8 @@ document.addEventListener('DOMContentLoaded', function () {
         calculateNextStep();
     }
 
-
-    function showNextState(stateIndex) {
-      if (stateIndex >= descriptions.length) {
-        algorithmStepsDiv.innerHTML += "<b>Fin del algoritmo</b>";
-        return;
-      }
-
-      let currentState = graph.states[stateIndex];
-      algorithmStepsDiv.innerHTML += descriptions[stateIndex];
-      cy.edges().removeClass('selected-edge');
-      cy.edges().removeClass('available-edge');
-
-      cy.edges().forEach(function (edge) {
-        if (currentState.usedEdges.some((usedEdge) => usedEdge.id === edge.id())) {
-          edge.addClass('mst');
-          edge.removeClass('not-in-mst');
-        }
-        else if (currentState.selectedEdges.some((selectedEdge) => selectedEdge.id === edge.id()))
-          edge.addClass('selected-edge');
-        else if (currentState.availableEdges.some((availableEdge) => availableEdge.id === edge.id()))
-          edge.addClass('available-edge');
-        
-      });
-
-      cy.nodes().forEach(function (node) {
-        if (currentState.visitedNodes.includes(node.id()))
-          node.addClass('visited-node');
-        else
-          node.removeClass('visited-node');
-      });
-      setTimeout(() => showNextState(stateIndex + 1), 1000);
-    }
-
     calculateNextStep();
 
-    // let descriptions = graph.getStepsDescriptions();
-    // showNextState(0);
     startReproduction(cy, graph.states, graph.getStepsDescriptions());
   }
 
@@ -404,60 +369,60 @@ document.addEventListener('DOMContentLoaded', function () {
     return [edgeToUse, minEdges];
   }
 
-  function runPrimAlgorithmFromNode(startNodeId) {
-    var algorithmStepsDiv = document.getElementById('algorithmSteps');
-    algorithmStepsDiv.innerHTML = '';
+  // function runPrimAlgorithmFromNode(startNodeId) {
+  //   var algorithmStepsDiv = document.getElementById('algorithmSteps');
+  //   algorithmStepsDiv.innerHTML = '';
 
-    var adjacencyList = getAdjacencyList();
-    var includedNodes = new Set();
-    var edgesInMST = [];
+  //   var adjacencyList = getAdjacencyList();
+  //   var includedNodes = new Set();
+  //   var edgesInMST = [];
 
-    includedNodes.add(startNodeId);
+  //   includedNodes.add(startNodeId);
 
-    function runNextStep() {
-      var minEdge = findMinEdge(adjacencyList, includedNodes);
+  //   function runNextStep() {
+  //     var minEdge = findMinEdge(adjacencyList, includedNodes);
 
-      if (minEdge) {
-        cy.getElementById(minEdge.source + minEdge.target).addClass('considering-edge');
+  //     if (minEdge) {
+  //       cy.getElementById(minEdge.source + minEdge.target).addClass('considering-edge');
 
-        setTimeout(function () {
-          includedNodes.add(minEdge.target);
+  //       setTimeout(function () {
+  //         includedNodes.add(minEdge.target);
 
-          cy.getElementById(minEdge.source + minEdge.target).removeClass('considering-edge');
-          cy.getElementById(minEdge.source + minEdge.target).addClass('mst');
+  //         cy.getElementById(minEdge.source + minEdge.target).removeClass('considering-edge');
+  //         cy.getElementById(minEdge.source + minEdge.target).addClass('mst');
 
-          edgesInMST.push(minEdge);
+  //         edgesInMST.push(minEdge);
 
-          //algorithmStepsDiv.innerHTML += `${includedNodes.size}: Arista seleccionada ${minEdge.source} - ${minEdge.target} <br>`;
+  //         //algorithmStepsDiv.innerHTML += `${includedNodes.size}: Arista seleccionada ${minEdge.source} - ${minEdge.target} <br>`;
 
-          algorithmStepsDiv.innerHTML += `Paso ${includedNodes.size}: Agregar arista ${minEdge.source} - ${minEdge.target} <br>`;
+  //         algorithmStepsDiv.innerHTML += `Paso ${includedNodes.size}: Agregar arista ${minEdge.source} - ${minEdge.target} <br>`;
 
-          showMST(edgesInMST);
+  //         showMST(edgesInMST);
 
-          if (includedNodes.size < cy.nodes().length) {
-            setTimeout(function () {
-              cy.getElementById(minEdge.source + minEdge.target).removeClass('mst');
-              runNextStep();
-            }, 1000);
-          } else {
-            //algorithmStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
-            algorithmStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
-            edgesInMST.forEach(function (edge) {
-              algorithmStepsDiv.innerHTML += `Arista ${edge.source} - ${edge.target}<br>`;
-            });
+  //         if (includedNodes.size < cy.nodes().length) {
+  //           setTimeout(function () {
+  //             cy.getElementById(minEdge.source + minEdge.target).removeClass('mst');
+  //             runNextStep();
+  //           }, 1000);
+  //         } else {
+  //           //algorithmStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
+  //           algorithmStepsDiv.innerHTML += '<br style="font-family: Arial, sans-serif;>Resultado final:<br>';
+  //           edgesInMST.forEach(function (edge) {
+  //             algorithmStepsDiv.innerHTML += `Arista ${edge.source} - ${edge.target}<br>`;
+  //           });
 
-            cy.edges().forEach(function (edge) {
-              if (!edgesInMST.some(e => e.source === edge.source().id() && e.target === edge.target().id())) {
-                edge.addClass('not-in-mst');
-              }
-            });
-          }
-        }, 1000);
-      }
-    }
+  //           cy.edges().forEach(function (edge) {
+  //             if (!edgesInMST.some(e => e.source === edge.source().id() && e.target === edge.target().id())) {
+  //               edge.addClass('not-in-mst');
+  //             }
+  //           });
+  //         }
+  //       }, 1000);
+  //     }
+  //   }
 
-    runNextStep();
-  }
+  //   runNextStep();
+  // }
 
 
   function runKruskalAlgorithm() {
@@ -587,36 +552,30 @@ document.addEventListener('DOMContentLoaded', function () {
     return adjacencyList;
   }
 
-  function findMinEdge(adjacencyList, includedNodes) {
-    var minEdge = null;
+  // function findMinEdge(adjacencyList, includedNodes) {
+  //   var minEdge = null;
 
-    includedNodes.forEach(function (nodeId) {
-      var edges = adjacencyList[nodeId];
+  //   includedNodes.forEach(function (nodeId) {
+  //     var edges = adjacencyList[nodeId];
 
-      edges.forEach(function (edge) {
-        if (!includedNodes.has(edge.target) && (!minEdge || edge.weight < minEdge.weight || (edge.weight === minEdge.weight && edge.source + edge.target < minEdge.source + minEdge.target))) {
-          minEdge = { source: nodeId, target: edge.target, weight: edge.weight };
-        }
-      });
-    });
+  //     edges.forEach(function (edge) {
+  //       if (!includedNodes.has(edge.target) && (!minEdge || edge.weight < minEdge.weight || (edge.weight === minEdge.weight && edge.source + edge.target < minEdge.source + minEdge.target))) {
+  //         minEdge = { source: nodeId, target: edge.target, weight: edge.weight };
+  //       }
+  //     });
+  //   });
 
-    return minEdge;
-  }
+  //   return minEdge;
+  // }
 
-  function showMST(edgesInMST) {
-    cy.edges().removeClass('mst');
+  // function showMST(edgesInMST) {
+  //   cy.edges().removeClass('mst');
 
-    edgesInMST.forEach(function (edge) {
-      cy.getElementById(edge.source + edge.target).addClass('mst');
-      cy.getElementById(edge.target + edge.source).addClass('mst');
-    });
-  }
-
-  //Acciones para botones de reproduccion 
-  document.getElementById('pause-btn').addEventListener('click', () => {
-
-  });
-
+  //   edgesInMST.forEach(function (edge) {
+  //     cy.getElementById(edge.source + edge.target).addClass('mst');
+  //     cy.getElementById(edge.target + edge.source).addClass('mst');
+  //   });
+  // }
 
   // Event listeners
   document.getElementById('edgeWeightButton').addEventListener('click', guardarPeso);
@@ -626,6 +585,4 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('deleteSelectedNode').addEventListener('click', deleteSelectedElement);
   document.getElementById('runPrimAlgorithmButton').addEventListener('click', runPrimAlgorithm);
   document.getElementById('runKruskalAlgorithmButton').addEventListener('click', runKruskalAlgorithm);
-  
-
 });
