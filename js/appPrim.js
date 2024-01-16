@@ -330,12 +330,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   }
 
-
-
   function altRunPrimFromNode(startNodeId) {
-    let algorithmStepsDiv = document.getElementById('algorithmSteps');
-    algorithmStepsDiv.innerHTML = '';
-
     let graph = new Graph(startNodeId, cy.nodes().length);
 
     let includedNodes = new Set();
@@ -364,7 +359,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       graph.setAvailableEdges(availableEdges);
 
-      let [edgeToUse, minEdges] = altFindMinEdges(availableEdges);
+      let [edgeToUse, minEdges] = findMinEdges(availableEdges);
       graph.setSelectedEdges(minEdges);
 
       graph.addUsedEdge(edgeToUse);
@@ -382,7 +377,7 @@ document.addEventListener('DOMContentLoaded', function () {
     startReproduction(cy, graph.states, graph.getStepsDescriptions());
   }
 
-  function altFindMinEdges(edges) {
+  function findMinEdges(edges) {
     if (edges.length === 0) return null;
 
     let minEdges = [];
@@ -404,15 +399,52 @@ document.addEventListener('DOMContentLoaded', function () {
     return [edgeToUse, minEdges];
   }
 
-
   function runKruskalAlgorithm() {
-    cy.nodes().removeClass('visited-node');
-    cy.edges().addClass('not-in-mst');
-    cy.edges().removeClass('mst');
-    cy.edges().removeClass('selected');
-    cy.edges().removeClass('selected-edge');
-    cy.edges().removeClass('available-edge');
+    let graph = new KruskalGraph(cy.nodes().length);
 
+    function calculateStates() {
+      let sortedEdges = cy.edges().map((edge) => new Edge(edge.id(), edge.source().id(), edge.target().id(), edge.data("weight")));
+      sortedEdges.sort((a, b) => a.weight - b.weight);  
+
+      while (!graph.isDone()) {
+        let availableEdges = sortedEdges.filter((edge) => graph.isAvailable(edge));
+        graph.setAvailableEdges(availableEdges);
+
+        function checkAvEdgeAt(i) {
+          if (i >= availableEdges.length) return;
+
+          let selectedEdge = availableEdges[i];
+          graph.setSelectedEdges([selectedEdge]);
+
+          let sourceNodeId = selectedEdge.source;
+          let targetNodeId = selectedEdge.target;
+          
+          graph.tryAddToDisjointSet(sourceNodeId);
+          graph.tryAddToDisjointSet(targetNodeId);
+
+          if (graph.find(sourceNodeId) === graph.find(targetNodeId)) {
+            graph.setRejectedEdge(selectedEdge);
+            checkAvEdgeAt(i + 1);
+          }
+          else {
+            graph.addUsedEdge(selectedEdge);  
+
+            if (!graph.states[graph.states.length - 1].visitedNodes.includes(selectedEdge.source))
+              graph.addVisitedNode(selectedEdge.source);
+            if (!graph.states[graph.states.length - 1].visitedNodes.includes(selectedEdge.target))
+              graph.addVisitedNode(selectedEdge.target);
+          }
+        }
+        checkAvEdgeAt(0);
+      }
+    }
+
+    calculateStates();
+    startReproduction(cy, graph.states, graph.getStepsDescriptions());
+  }
+
+
+  function oldrunKruskalAlgorithm() {
     var edges = cy.edges().toArray();
     edges.sort((a, b) => a.data('weight') - b.data('weight'));
 
@@ -523,48 +555,6 @@ document.addEventListener('DOMContentLoaded', function () {
   cy.style().selector('.not-in-mst').style({
     'line-opacity': 0.3
   });
-
-  function getAdjacencyList() {
-    var adjacencyList = {};
-
-    cy.nodes().forEach(function (node) {
-      var nodeId = node.id();
-      adjacencyList[nodeId] = [];
-
-      node.connectedEdges().forEach(function (edge) {
-        var targetNodeId = edge.target().id();
-        var weight = edge.data('weight');
-        adjacencyList[nodeId].push({ target: targetNodeId, weight: weight });
-      });
-    });
-
-    return adjacencyList;
-  }
-
-  // function findMinEdge(adjacencyList, includedNodes) {
-  //   var minEdge = null;
-
-  //   includedNodes.forEach(function (nodeId) {
-  //     var edges = adjacencyList[nodeId];
-
-  //     edges.forEach(function (edge) {
-  //       if (!includedNodes.has(edge.target) && (!minEdge || edge.weight < minEdge.weight || (edge.weight === minEdge.weight && edge.source + edge.target < minEdge.source + minEdge.target))) {
-  //         minEdge = { source: nodeId, target: edge.target, weight: edge.weight };
-  //       }
-  //     });
-  //   });
-
-  //   return minEdge;
-  // }
-
-  // function showMST(edgesInMST) {
-  //   cy.edges().removeClass('mst');
-
-  //   edgesInMST.forEach(function (edge) {
-  //     cy.getElementById(edge.source + edge.target).addClass('mst');
-  //     cy.getElementById(edge.target + edge.source).addClass('mst');
-  //   });
-  // }
 
   // Event listeners
   document.getElementById('edgeWeightButton').addEventListener('click', guardarPeso);
