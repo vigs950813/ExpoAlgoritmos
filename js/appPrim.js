@@ -278,6 +278,40 @@ document.addEventListener('DOMContentLoaded', function () {
     containerError.classList.remove("alert", "alert-danger");
     inputError.classList.remove("is-invalid");
   }
+
+  // Event listener para el cambio en el menú desplegable
+  var algorithmSelect = document.getElementById('algorithmSelect');
+  algorithmSelect.addEventListener('change', function () {
+    var selectedAlgorithm = algorithmSelect.value;
+    var algorithmSelects = document.getElementById('algorithmSelect');
+    clearError(errorContainer,algorithmSelects);
+    // Mostrar u ocultar el input startNodeId según el algoritmo seleccionado
+    var startNodeIdInput = document.getElementById('startNodeId');
+    if (selectedAlgorithm === 'prim') {
+      startNodeIdInput.style.display = 'block';
+    } else {
+      startNodeIdInput.style.display = 'none';
+    }
+  });
+  //evento escucha para correr algoritmo seleccionado
+  document.getElementById('runAlgoritmo').addEventListener('click', function () {
+    var selectedAlgorithm = document.getElementById('algorithmSelect').value;
+    var selectedAlgorithms = document.getElementById('algorithmSelect');
+    switch (selectedAlgorithm) {
+      case 'prim':
+        runPrimAlgorithm();
+        break;
+      case 'kruskal':
+        runKruskalAlgorithm();
+        break;
+      case 'dijkstra':
+        // Lógica para el algoritmo de Dijkstra
+        break;
+      default:
+        // Manejar el caso de no seleccionar un algoritmo
+        showError('Selecciona un algoritmo antes de ejecutar.',errorContainer,selectedAlgorithms);
+    }
+  });
   //_________________________________________Funciones de ALgoritmo Prim______________________________________--
   // Lógica del algoritmo de Prim
   function runPrimAlgorithm() {
@@ -363,7 +397,7 @@ document.addEventListener('DOMContentLoaded', function () {
           edge.addClass('selected-edge');
         else if (currentState.availableEdges.some((availableEdge) => availableEdge.id === edge.id()))
           edge.addClass('available-edge');
-        
+
       });
 
       cy.nodes().forEach(function (node) {
@@ -624,8 +658,8 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('addNodeButton').addEventListener('click', addNode);
   document.getElementById('saveEdgeWeightButton').addEventListener('click', editEdgeWeight);
   document.getElementById('deleteSelectedNode').addEventListener('click', deleteSelectedElement);
-  document.getElementById('runPrimAlgorithmButton').addEventListener('click', runPrimAlgorithm);
-  document.getElementById('runKruskalAlgorithmButton').addEventListener('click', runKruskalAlgorithm);
-  
+  //document.getElementById('runPrimAlgorithmButton').addEventListener('click', runPrimAlgorithm); ya no se ocupan por el select
+  //document.getElementById('runKruskalAlgorithmButton').addEventListener('click', runKruskalAlgorithm); en el select se ven las opciones de algoritmo
+
 
 });
