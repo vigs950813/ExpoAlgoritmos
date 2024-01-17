@@ -75,14 +75,22 @@ class KruskalGraph {
             return structuredClone(this.states[lastStateIndex]);
     }
 
+    lastState() {
+        return this.states[this.states.length - 1];
+    }
+
     isAvailable(edge) {
         let lastStateIndex = this.states.length - 1;
         if (lastStateIndex < 0)
             return true;
 
+        let sourceIsVisited = this.lastState().visitedNodes.includes(edge.source);
+        let targetIsVisited = this.lastState().visitedNodes.includes(edge.target);
+        let createsCycle = sourceIsVisited && targetIsVisited;
+
         let isUsed = this.states[lastStateIndex].usedEdges.some((usedEdge) => usedEdge.id === edge.id);   
-        let isCycled = this.states[lastStateIndex].cycledEdges.some((usedEdge) => usedEdge.id === edge.id);
-        return !isUsed && !isCycled;
+        let isCycled = this.states[lastStateIndex].cycledEdges.some((cycledEdge) => cycledEdge.id === edge.id);
+        return !isUsed && !isCycled && !createsCycle;
     }
 
     isDone() {

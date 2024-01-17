@@ -51,8 +51,14 @@ class DijkstraGraph {
 
     isAvailable(edge) {
         let isUsed = this.lastState().usedEdges.some((usedEdge) => usedEdge.id === edge.id);
-        let createsCycle = this.lastState().visitedNodes.includes(edge.source) && this.lastState().visitedNodes.includes(edge.target);
-        return !isUsed && !createsCycle;
+
+        let sourceIsVisited = this.lastState().visitedNodes.includes(edge.source);
+        let targetIsVisited = this.lastState().visitedNodes.includes(edge.target);
+
+        let createsCycle = sourceIsVisited && targetIsVisited;
+        let isConnected = sourceIsVisited || targetIsVisited;
+
+        return !isUsed && !createsCycle && isConnected;
     }
 
     isDone() {
