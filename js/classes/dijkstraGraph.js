@@ -59,17 +59,14 @@ class DijkstraGraph {
         return this.lastState().visitedNodes.length >= this.totalNodes;
     }
 
-    stateType(index) {
-        if (index == 0)
-            return "initial";
-
+    stateType(i) {
         let currentState = this.states[i];
         let previousState = this.states[i - 1];
 
-        if (currentState.availableEdges.length > previousState.availableEdges.length)
-            return "availableEdges";
-        else if (currentState.visitedNodes.length > previousState.visitedNodes.length)
+        if (i == 0 || currentState.visitedNodes.length > previousState.visitedNodes.length)
             return "visitedNode";
+        else if (currentState.availableEdges.length > previousState.availableEdges.length)
+            return "availableEdges";
         else if (currentState.usedEdges.length > previousState.usedEdges.length)
             return "usedEdge";
     }
@@ -106,7 +103,7 @@ class DijkstraGraph {
     }
 
     getTableAt(index) {
-        if (index < 0 || index >= this.lastState().visitedNodes.length)
+        if (index < 0 || index >= this.states.length)
             return;
 
         var tbl = document.getElementById("dijkstraTable");
@@ -116,7 +113,9 @@ class DijkstraGraph {
         let thead = document.createElement('thead');
         let tbody = document.createElement('tbody');
         let tableResult = this.tableResult;
-        let visitedNodes = this.lastState().visitedNodes;
+        let completedVisitedNodes = this.lastState().visitedNodes;
+        let states = this.states;
+        let stateType = this.stateType(index);
         table.appendChild(thead);
         table.appendChild(tbody);
 
@@ -141,11 +140,23 @@ class DijkstraGraph {
             let headerNode = document.createElement('td');
             headerNode.innerHTML += `(${node.id()})`;
             row.appendChild(headerNode);
-            while (i <= index) {
+
+            function cellIsShowable() {
+                let currentVisitedNodes = states[index].visitedNodes;
+                if (stateType == "availableEdges") {
+                    return i < currentVisitedNodes.length; 
+                } else {
+                    if (node.id() == currentVisitedNodes[currentVisitedNodes.length - 1])
+                        return i < currentVisitedNodes.length; 
+                    else
+                        return i < currentVisitedNodes.length - 1; 
+                }
+            }
+
+            while (cellIsShowable()) {
                 // console.log("tableResult index: ", tableResult[node.id()][i])
                 let r = document.createElement('td');
-                if (node.id() == visitedNodes[i]) {
-                    // if(node.id() == nodesAlreadyMarked[i]) {
+                if (node.id() == completedVisitedNodes[i]) {
                     r.className = "nodo-optimo";
                 }
                 r.innerHTML += `(${tableResult[node.id()][i].c}, ${tableResult[node.id()][i].iNode})`;
