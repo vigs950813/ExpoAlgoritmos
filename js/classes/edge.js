@@ -1,9 +1,9 @@
 class Edge {
-    constructor(id, source, target, weight) {
-        this.id = id;
-        this.source = source;
-        this.target = target;
-        this.weight = weight;
+    constructor(edge) {
+        this.id = edge.id();
+        this.source = edge.source().id();
+        this.target = edge.target().id();
+        this.weight = edge.data('weight');
     }
 
     toString() {

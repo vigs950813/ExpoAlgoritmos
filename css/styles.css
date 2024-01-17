@@ -223,7 +223,7 @@ span.material-icons {
   color: rgba(117, 117, 117, 0.767);
 }
 
-#algorithmSteps {
+#steps-container {
   flex: 0 0 40%; /* 40% de la altura, no se puede expandir ni contraer */
   padding: 10px;
   border: solid black 2px;
@@ -231,7 +231,7 @@ span.material-icons {
   box-sizing: border-box;
 }
 
-#algorithmSteps ul {
+#steps-container ul {
   margin-bottom: 0;
 }
 

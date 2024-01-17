@@ -341,7 +341,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       includedNodes.forEach(function (nodeId) {
         cy.getElementById(nodeId).connectedEdges().forEach(function (edge) {
-          let _edge = new Edge(edge.id(), edge.source().id(), edge.target().id(), edge.data("weight"));
+          let _edge = new Edge(edge);
           var adjacentNodeId = _edge.target === nodeId ? _edge.source : _edge.target;
 
           if (!includedNodes.has(adjacentNodeId))
@@ -374,7 +374,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     calculateNextStep();
 
-    startReproduction(cy, graph.states, graph.getStepsDescriptions());
+    startReproduction(cy, graph);
   }
 
   function findMinEdges(edges) {
@@ -403,7 +403,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let graph = new KruskalGraph(cy.nodes().length);
 
     function calculateStates() {
-      let sortedEdges = cy.edges().map((edge) => new Edge(edge.id(), edge.source().id(), edge.target().id(), edge.data("weight")));
+      let sortedEdges = cy.edges().map((edge) => new Edge(edge));
       sortedEdges.sort((a, b) => a.weight - b.weight);  
 
       while (!graph.isDone()) {
@@ -440,7 +440,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     calculateStates();
-    startReproduction(cy, graph.states, graph.getStepsDescriptions());
+    startReproduction(cy, graph);
   }
   /*  DIJKSTRA ALGORITHM  */
   function runDijkstraAlgorithm() {
@@ -452,52 +452,53 @@ document.addEventListener('DOMContentLoaded', function () {
       cy.edges().removeClass('not-in-mst');
       runDijkstraAlgorithmFromNode(startNodeId);
     } else {
-
       showError("El nodo de inicio no existe en el grafo.",errorContainer,startNodeIdInput);
     }
   }
 
   function runDijkstraAlgorithmFromNode(startNodeId){
-    var dijkstraStepsDiv = document.getElementById('algorithmSteps');
+    var dijkstraStepsDiv = document.getElementById('dijkstra-container');
     dijkstraStepsDiv.innerHTML = '';
-    console.log("Soy el algoritmo Dijkstra");
     var adjacencyList = getAdjacencyList();
     var tableResult = {}
-    var result = initValues(startNodeId, tableResult);
+    let graph = new DijkstraGraph(startNodeId, cy.nodes().length);
+    var result = initValues(startNodeId, graph.tableResult);
     var node = result[startNodeId].slice()[0];
     var optNodeId = startNodeId;
-    var total_nodes = 0;
-    var nodesAlredyMarked = [];
+    var nodesAlreadyMarked = [];
 
     /* ANALISIS PRINCIPAL DEL ALGORITMO */
-    while(total_nodes < cy.nodes().length){
-      console.log("optimalNode: ", optNodeId)
-      console.log("optNode info: ", "(", node.c, ", ", node.iNode, ", ", node.opt, ")");
-      adjacencyList[optNodeId].forEach(function (tNode) {
-        if(!nodesAlredyMarked.includes(tNode.target)){
-          console.log(":: Analizando nodo adyacente: (", tNode.weight, ", ", tNode.target, ")");
+    while(!graph.isDone()){
+      // console.log("optimalNode: ", optNodeId)
+      // console.log("optNode info: ", "(", node.c, ", ", node.iNode, ", ", node.opt, ")");
+      adjacencyList[optNodeId].forEach((tNode) => {
+        if(!nodesAlreadyMarked.includes(tNode.target)){
+          // console.log(":: Analizando nodo adyacente: (", tNode.weight, ", ", tNode.target, ")");
           cost = node.c + tNode.weight;
-          console.log(":: Suma del costo: ", cost)
+          // console.log(":: Suma del costo: ", cost)
           if(result[tNode.target][0].c == -1 || (result[tNode.target][0].c > cost)){
-            console.log(":::: Si es mejor que el anterior")
+            // console.log(":::: Si es mejor que el anterior")
             result[tNode.target][0].c = cost;
             result[tNode.target][0].iNode = optNodeId;
           }
         }
       });
-      console.log(":: tableResult: ", tableResult);
-      saveResult(tableResult, result, nodesAlredyMarked);
-      nodesAlredyMarked.push(optNodeId)
-      optNodeId = getOptimalNode(result);
-      if(optNodeId == null){
-        break;
-      }
+      let availableEdges = cy.edges().filter((edge) => graph.isAvailable(new Edge(edge))).map((edge) => new Edge(edge));
+      graph.setAvailableEdges(availableEdges);
+
+      // console.log(":: tableResult: ", tableResult);
+      saveResult(graph.tableResult, result, nodesAlreadyMarked);
+      nodesAlreadyMarked.push(optNodeId)
+      
+      let edgeToUse;
+      [ edgeToUse, optNodeId] = getOptimalNode(result);
+      graph.addVisitedNode(optNodeId);
+      graph.addUsedEdge(new Edge(edgeToUse));
       node = result[optNodeId].slice()[0];
-      total_nodes++;
     }
-    saveResult(tableResult, result, nodesAlredyMarked);
+    saveResult(graph.tableResult, result, nodesAlreadyMarked);
     index = 0;
-    console.log(tableResult)
+    // console.log(tableResult)
     //BUENOOO
     /*
     while(index < cy.nodes().length){
@@ -543,12 +544,13 @@ document.addEventListener('DOMContentLoaded', function () {
         headerNode.innerHTML += `(${node.id()})`;
         row.appendChild(headerNode);
         while(i <= index) {
-          console.log("tableResult index: ", tableResult[node.id()][i])
+          console.log("tableResult index: ", graph.tableResult[node.id()][i])
           let r = document.createElement('td');
-          if(node.id() == nodesAlredyMarked[i]) {
+          if(node.id() == graph.lastState().visitedNodes[i]) {
+          // if(node.id() == nodesAlreadyMarked[i]) {
             r.className = "nodo-optimo";
           }
-          r.innerHTML += `(${tableResult[node.id()][i].c}, ${tableResult[node.id()][i].iNode})`;
+          r.innerHTML += `(${graph.tableResult[node.id()][i].c}, ${graph.tableResult[node.id()][i].iNode})`;
           row.appendChild(r);
           i++;
         }
@@ -561,6 +563,11 @@ document.addEventListener('DOMContentLoaded', function () {
         tbody.appendChild(row);
       });
       dijkstraStepsDiv.appendChild(table);
+
+      if (index == cy.nodes().length - 1)
+        return;
+
+      setTimeout(() => buildTableResult(index+1), 1000);
     }
 
     function showTableResult(nodeID, index) {
@@ -576,7 +583,7 @@ document.addEventListener('DOMContentLoaded', function () {
       var m = 0;
       let alreadyMarked = [];
       while(m <= index){
-        alreadyMarked.push(nodesAlredyMarked[m]);
+        alreadyMarked.push(nodesAlreadyMarked[m]);
         m++;
       }
       adjacencyList[nodeID].forEach(function (tNode) {
@@ -607,10 +614,11 @@ document.addEventListener('DOMContentLoaded', function () {
         cy.edges().removeClass('available-edge');
         return;
       }
-      setTimeout(() => showTableResult(nodesAlredyMarked[index+1], index+1), 1000);
+      setTimeout(() => showTableResult(nodesAlreadyMarked[index+1], index+1), 1000);
     }
 
-    showTableResult(startNodeId, 0);
+    startReproduction(cy, graph);
+    // buildTableResult(0);
   }
 
   function getAdjacencyList() {
@@ -621,12 +629,12 @@ document.addEventListener('DOMContentLoaded', function () {
       adjacencyList[nodeId] = [];
 
       node.connectedEdges().forEach(function (edge) {
-        var targetNodeId = edge.target().id();
-        var weight = edge.data('weight');
-        if(node.id() != targetNodeId){
-          adjacencyList[nodeId].push({ target: targetNodeId, weight: parseInt(weight), edgeID: edge.id() }); 
+        let edgeObject = new Edge(edge);
+        var weight = edgeObject.weight;
+        if(node.id() != edgeObject.target){
+          adjacencyList[nodeId].push({ target: edgeObject.target, weight: parseInt(weight), edgeID: edgeObject.id, edge: edgeObject }); 
         } else {
-          adjacencyList[nodeId].push({ target: edge.source().id(), weight: parseInt(weight), edgeID: edge.id() }); 
+          adjacencyList[nodeId].push({ target: edgeObject.source, weight: parseInt(weight), edgeID: edgeObject.id, edge: edgeObject }); 
         }
       });
     });
@@ -671,13 +679,20 @@ document.addEventListener('DOMContentLoaded', function () {
       (first, second) => { return first[1][0].c - second[1][0].c }
     );
     // Marcamos como más optimo el nodo con costo más barato
-    result[final_result[0][0]][0].opt = true
-    return final_result[0][0];
+
+    let optNodeId = final_result[0][0];
+    let edgeToUse = cy.getElementById(optNodeId).connectedEdges().find((edge) => {
+        let iNodeId = result[optNodeId][0].iNode;
+        return edge.source().id() == iNodeId || edge.target().id() == iNodeId;
+      });
+
+    result[optNodeId][0].opt = true
+    return [edgeToUse, optNodeId];
   }
 
-  function saveResult(tableResult, result, nodesAlredyMarked) {
+  function saveResult(tableResult, result, nodesAlreadyMarked) {
     cy.nodes().forEach(function (node) {
-      if(nodesAlredyMarked.includes(node.id())){
+      if(nodesAlreadyMarked.includes(node.id())){
         tableResult[node.id()].push( {c: '--', iNode: '--', opt: '--'} );
       } else {
         tableResult[node.id()].push(Object.assign({}, result[node.id()][0]));

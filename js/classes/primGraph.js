@@ -46,10 +46,12 @@ class PrimGraph {
         return this.states[this.states.length - 1].visitedNodes.length >= this.totalNodes;
     }
 
-    getStepsDescriptions() {
-        let descriptions = [`<b>El nodo inicial es ${this.startNodeId}</b><br>`];
+    getStepsDescriptionsAt(index) {
+        if (index < 0 || index >= this.states.length)
+            return;
 
-        for (let i = 1; i < this.states.length; i++) {
+        let descriptions = [`<b>El nodo inicial es ${this.startNodeId}</b><br>`];
+        for (let i = 1; i <= index; i++) {
             let currentState = this.states[i];
             let previousState = this.states[i - 1];
 

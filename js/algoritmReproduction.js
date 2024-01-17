@@ -1,8 +1,7 @@
 let playing = false;
 let stateIndex = 0;
 let cy;
-let states = [];
-let descriptions = [];
+let graph;
 
 class Button {
   constructor(id) {
@@ -45,11 +44,17 @@ buttons.pause.hide();
 
 function showStateAt(stateIndex) {
   let algorithmStepsDiv = document.getElementById('algorithmSteps');
-  let currentDescription = descriptions.slice(0, stateIndex + 1).join('');
+  let dijkstraDiv = document.getElementById('dijkstra-container');
+  let currentDescription = graph.getStepsDescriptionsAt(stateIndex).join('');
   algorithmStepsDiv.innerHTML = currentDescription;
+
+  if (graph.constructor.name == 'DijkstraGraph') {
+    dijkstraDiv.appendChild(graph.getTableAt(stateIndex));
+  } else 
+    dijkstraDiv.innerHTML = "";
   
-  let currentState = states[stateIndex];
-  if (stateIndex == descriptions.length - 1)
+  let currentState = graph.states[stateIndex];
+  if (stateIndex == graph.states.length - 1)
     algorithmStepsDiv.innerHTML += "<b>Fin del algoritmo</b>";
 
   cy.nodes().removeClass('visited-node');
@@ -87,27 +92,26 @@ function showStateAt(stateIndex) {
     buttons.previous.disable();
     buttons.replay.disable();
   }
-  else if (stateIndex == states.length - 1) {
+  else if (stateIndex == graph.states.length - 1) {
     buttons.next.disable();
     buttons.forward.disable();
   }
 }
 
-function startReproduction(_cy, _states, _descriptions) {
+function startReproduction(_cy, _graph) {
   cy = _cy;
-  states = _states;
-  descriptions = _descriptions;
+  graph = _graph;
   stateIndex = -1;
   disableButtons();
   clickPlay();
 }
 
 function play() {
-  if (playing && stateIndex + 1 < states.length) {
+  if (playing && stateIndex + 1 < graph.states.length) {
     stateIndex++;
     showStateAt(stateIndex);
 
-    if (stateIndex == states.length - 1)
+    if (stateIndex == graph.states.length - 1)
       clickPause();
     else
       setTimeout(play, 1000);
@@ -123,7 +127,7 @@ function clickPause() {
 buttons.pause.element.addEventListener('click', clickPause);
 
 function clickPlay() {
-  if (stateIndex == states.length - 1)
+  if (stateIndex == graph.states.length - 1)
     return;
 
   playing = true;
@@ -135,7 +139,7 @@ buttons.play.element.addEventListener('click', clickPlay);
 
 buttons.next.element.addEventListener('click', () => {
   clickPause();
-  stateIndex = stateIndex < states.length - 1 ? stateIndex + 1 : stateIndex;
+  stateIndex = stateIndex < graph.states.length - 1 ? stateIndex + 1 : stateIndex;
   showStateAt(stateIndex);
 });
 
@@ -153,6 +157,6 @@ buttons.replay.element.addEventListener('click', () => {
 
 buttons.forward.element.addEventListener('click', () => {
   clickPause();
-  stateIndex = states.length - 1;
+  stateIndex = graph.states.length - 1;
   showStateAt(stateIndex);
 });

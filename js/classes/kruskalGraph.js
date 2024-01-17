@@ -80,9 +80,9 @@ class KruskalGraph {
         if (lastStateIndex < 0)
             return true;
 
-        let isIncluded = this.states[lastStateIndex].usedEdges.some((usedEdge) => usedEdge.id === edge.id);   
+        let isUsed = this.states[lastStateIndex].usedEdges.some((usedEdge) => usedEdge.id === edge.id);   
         let isCycled = this.states[lastStateIndex].cycledEdges.some((usedEdge) => usedEdge.id === edge.id);
-        return !isIncluded && !isCycled;
+        return !isUsed && !isCycled;
     }
 
     isDone() {
@@ -104,10 +104,12 @@ class KruskalGraph {
         return allNodesVisited && allNodesConected();
     }
 
-    getStepsDescriptions() {
+    getStepsDescriptionsAt(index) {
+        if (index < 0 || index >= this.states.length)
+            return;
         let descriptions = [];
 
-        for (let i = 0; i < this.states.length; i++) {
+        for (let i = 0; i <= index; i++) {
             let currentState = this.states[i];
             let previousState = i > 0 ? this.states[i - 1] : null;
 
