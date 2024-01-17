@@ -50,12 +50,18 @@ function showStateAt(stateIndex) {
 
   if (graph.constructor.name == 'DijkstraGraph') {
     dijkstraDiv.appendChild(graph.getTableAt(stateIndex));
-  } else 
+  } else
     dijkstraDiv.innerHTML = "";
-  
+
   let currentState = graph.states[stateIndex];
-  if (stateIndex == graph.states.length - 1)
+  if (stateIndex == graph.states.length - 1) {
     algorithmStepsDiv.innerHTML += "<b>Fin del algoritmo</b>";
+
+    if (graph.constructor.name != 'DijkstraGraph') {
+      let totalWeight = currentState.usedEdges.reduce((sum, usedEdge) => sum + Number(usedEdge.weight), 0);
+      algorithmStepsDiv.innerHTML += `<br><b>La distancia total es: ${totalWeight}</b>`
+    };
+  }
 
   cy.nodes().removeClass('visited-node');
 
