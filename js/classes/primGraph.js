@@ -1,4 +1,4 @@
-class Graph {
+class PrimGraph {
 
     constructor(startNodeId, totalNodes) {
         let firstState = new State();

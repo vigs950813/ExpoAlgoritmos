@@ -331,7 +331,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function altRunPrimFromNode(startNodeId) {
-    let graph = new Graph(startNodeId, cy.nodes().length);
+    let graph = new PrimGraph(startNodeId, cy.nodes().length);
 
     let includedNodes = new Set();
     includedNodes.add(startNodeId);
@@ -447,18 +447,17 @@ document.addEventListener('DOMContentLoaded', function () {
     var startNodeId = document.getElementById('startNodeId').value.trim().toUpperCase();
     var startNodeIdInput = document.getElementById('startNodeId');
     clearError(errorContainer,startNodeIdInput);
-    var endNodeId = "D"
     if (cy.getElementById(startNodeId).nonempty()) {
       cy.edges().removeClass('mst');
       cy.edges().removeClass('not-in-mst');
-      runDijkstraAlgorithmFromNode(startNodeId, endNodeId);
+      runDijkstraAlgorithmFromNode(startNodeId);
     } else {
 
       showError("El nodo de inicio no existe en el grafo.",errorContainer,startNodeIdInput);
     }
   }
 
-  function runDijkstraAlgorithmFromNode(startNodeId, endNodeId){
+  function runDijkstraAlgorithmFromNode(startNodeId){
     var dijkstraStepsDiv = document.getElementById('algorithmSteps');
     dijkstraStepsDiv.innerHTML = '';
     console.log("Soy el algoritmo Dijkstra");
@@ -686,105 +685,6 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  function oldrunKruskalAlgorithm() {
-    var edges = cy.edges().toArray();
-    edges.sort((a, b) => a.data('weight') - b.data('weight'));
-
-    var algorithmStepsContainer = document.getElementById('algorithmSteps');
-    algorithmStepsContainer.innerHTML = ''; // Limpiar el contenido previo
-
-    // Mostrar las aristas ordenadas de menor a mayor peso
-    var sortedEdgesInfo = 'Aristas ordenadas de menor a mayor peso: ';
-    edges.forEach((edge, i) => {
-      sortedEdgesInfo += `${edge.id()} (${edge.data('weight')}), `;
-    });
-    algorithmStepsContainer.innerHTML += `<p>${sortedEdgesInfo.slice(0, -2)}.</p>`;
-
-    var index = edges.length + 1; // Incrementar el índice para mostrar el contenido después de la lista ordenada
-    var minimumSpanningTree = [];
-    var disjointSet = {};
-
-    edges.forEach((edge, i) => {
-      var sourceNode = edge.source().id();
-      var targetNode = edge.target().id();
-
-      if (!disjointSet[sourceNode]) disjointSet[sourceNode] = sourceNode;
-      if (!disjointSet[targetNode]) disjointSet[targetNode] = targetNode;
-
-      // Función auxiliar para verificar si agregar la arista crea un ciclo
-      function formsCycle(source, target) {
-        return find(source) === find(target);
-      }
-
-      var cycleCheck = formsCycle(sourceNode, targetNode);
-      setTimeout(() => {
-        // Agregar información de paso a paso al div sobre la verificación de ciclos
-        var stepCycleInfo = `Verificación de ciclo para la arista ${edge.id()}: ${cycleCheck ? 'Se descarta, ya que forma un ciclo.' : 'No forma un ciclo, se agrega.'}`;
-        algorithmStepsContainer.innerHTML += `<p>${stepCycleInfo}</p>`;
-      }, index * 1000); // Mostrar la verificación después de la selección visual
-
-      if (!cycleCheck) {
-        union(sourceNode, targetNode);
-        minimumSpanningTree.push(edge);
-        setTimeout(() => {
-          // Cambiar el color del nodo al que pertenece la arista que no forma un ciclo
-          cy.getElementById(sourceNode).addClass('visited-node');
-          cy.getElementById(targetNode).addClass('visited-node');
-          // Resaltar la arista procesada visualmente
-          edge.addClass('mst');
-          edge.removeClass('not-in-mst');
-          // Agregar información de paso a paso al div sobre la selección de la arista
-          var stepInfo = `Paso ${i + 1}: Se selecciona la arista ${edge.id()} con peso ${edge.data('weight')}.`;
-          algorithmStepsContainer.innerHTML += `<p>${stepInfo}</p>`;
-        }, index * 1000); // Cambiar el tiempo según sea necesario
-
-        // Resaltar visualmente las aristas seleccionadas en cy
-        setTimeout(() => {
-          edge.addClass('selected');
-          edge.removeClass('not-in-mst');
-        }, index * 1000);
-      } else {
-        setTimeout(() => {
-          // Cambiar el color de la arista que forma un ciclo
-          edge.addClass('not-in-mst');
-          // Agregar información de paso a paso al div sobre la arista que forma un ciclo
-          var stepCycleInfo = `Paso ${i + 1}: Se descarta la arista ${edge.id()} ya que forma un ciclo.`;
-          algorithmStepsContainer.innerHTML += `<p>${stepCycleInfo}</p>`;
-        }, index * 1000); // Cambiar el tiempo según sea necesario
-      }
-
-      index++;
-    });
-
-    // Cambiar el color de las aristas que no se utilizaron
-    cy.edges().forEach((edge) => {
-      if (!minimumSpanningTree.includes(edge)) {
-        setTimeout(() => {
-          edge.addClass('not-in-mst');
-          // Agregar información de paso a paso al div sobre la arista no utilizada
-          var unusedEdgeInfo = `Arista no utilizada: ${edge.id()}.`;
-          algorithmStepsContainer.innerHTML += `<p>${unusedEdgeInfo}</p>`;
-        }, index * 1000); // Cambiar el tiempo según sea necesario
-        index++;
-      }
-    });
-
-    function find(node) {
-      if (disjointSet[node] !== node) {
-        disjointSet[node] = find(disjointSet[node]);
-      }
-      return disjointSet[node];
-    }
-
-    function union(nodeA, nodeB) {
-      var rootA = find(nodeA);
-      var rootB = find(nodeB);
-      disjointSet[rootA] = rootB;
-    }
-  }
-
-
-
   cy.style().selector('.working-node').style({
     'background-color': 'yellow'
   });
@@ -804,7 +704,4 @@ document.addEventListener('DOMContentLoaded', function () {
   document.getElementById('addNodeButton').addEventListener('click', addNode);
   document.getElementById('saveEdgeWeightButton').addEventListener('click', editEdgeWeight);
   document.getElementById('deleteSelectedNode').addEventListener('click', deleteSelectedElement);
-  //document.getElementById('runPrimAlgorithmButton').addEventListener('click', runPrimAlgorithm); ya no se ocupan por el select
-  //document.getElementById('runKruskalAlgorithmButton').addEventListener('click', runKruskalAlgorithm); en el select se ven las opciones de algoritmo
-
 });
