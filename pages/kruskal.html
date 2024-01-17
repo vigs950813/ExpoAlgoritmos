@@ -12,7 +12,7 @@
       integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="..//css/styles.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -29,7 +29,7 @@
     />
 
     <!-- Título de la página -->
-    <title>Análisis y diseño de algoritmos Dijkstra</title>
+    <title>Análisis y diseño de algoritmos Kruskal</title>
   </head>
 
   <body>
@@ -120,11 +120,11 @@
     <section class="navbar">
       <div class="container-fluid">
         <!-- Título de la sección -->
-        <div class="navbar-brand"><h2>Algoritmo de Dijkstra</h2></div>
+        <div class="navbar-brand"><h2>Algoritmo de Kruskal</h2></div>
 
         <!-- Formulario de interacción con el grafo -->
         <form class="d-flex">
-          <!-- Entrada de texto para el nombre del nuevo nodo -->
+          <!-- Entrada de texto para el nombre del nuevo nodo-->
           <input
             type="text"
             class="form-control me-1"
@@ -161,31 +161,22 @@
             Eliminar Seleccion
           </button>
 
-          <!-- Entrada de texto para el nombre del nodo de inicio del algoritmo -->
-          <input
+          <!-- Entrada de texto para el nombre del nodo de inicio del algoritmo KRUSKAL NO LO NECESITA-->
+          <!-- <input
             type="text"
             class="form-control me-2"
             placeholder="Ingresa el nombre del nodo de inicio"
             id="startNodeId"
             required
-          />
+          /> -->
 
-          <!-- Entrada de texto para el nombre del nodo de inicio del algoritmo -->
-          <input
-            type="text"
-            class="form-control me-2"
-            placeholder="Ingresa el nombre del nodo final"
-            id="endNodeId"
-            required
-          />
-
-          <!-- Botón para ejecutar el algoritmo de Dijkstra -->
+          <!-- Botón para ejecutar el algoritmo de Kruskal -->
           <button
             class="btn btn-outline-success"
             type="button"
-            id="runDijkstraAlgorithmButton"
+            id="runKruskalAlgorithmButton"
           >
-            Ejecutar Algoritmo de Dijkstra
+            Ejecutar Algoritmo de Kruskal
           </button>
         </form>
       </div>
@@ -199,17 +190,11 @@
       <div id="cy-container">
         <!-- Contenedor para el grafo -->
         <div id="cy"></div>
-        <div class="dijkstra-matrix">
-          <h3>Matriz de Dijkstra</h3>
-          <table id="dijkstraMatrix" class="table table-bordered"></table>
-        </div>
-        <!-- Contenedor para los pasos del algoritmo de Dijkstra -->
-        <div id="dijkstraSteps"></div>
+
+        <!-- Contenedor para los pasos del algoritmo de Kruskal -->
+        <div id="kruskalSteps"></div>
       </div>
-
     </section>
-
-
 
     <!-- Modal para ingresar el peso de una nueva arista -->
     <div
@@ -328,7 +313,7 @@
       integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
       crossorigin="anonymous"
     ></script>
-    <script src="../js/appDijkstra.js"></script>
+    <script src="../js/appKruskal.js"></script>
     <script src="https://unpkg.com/cytoscape@3.18.0/dist/cytoscape.min.js"></script>
   </body>
 </html>

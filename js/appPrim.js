@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', function () {
   // Declaración de variables
   var cy = initializeCytoscape();
@@ -34,10 +35,10 @@ document.addEventListener('DOMContentLoaded', function () {
         selector: 'edge',
         style: {
           'width': 2,
-          'line-color': '#ccc',
+          'line-color': ' #212121',
           'target-arrow-color': '#ccc',
           'target-arrow-shape': 'triangle',
-          'label': 'data(weight)'
+          'label': 'data(weight)',
         }
       },
       // Estilos adicionales
@@ -160,10 +161,10 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // Manejar clic en una arista para seleccionarla
-  cy.on('tap', 'edge', function (event) {
-    var edge = event.target;
-    selectedEdgeId = edge.id();
-  });
+  // cy.on('tap', 'edge', function (event) {
+  //   var edge = event.target;
+  //   selectedEdgeId = edge.id();
+  // });
 
   // Manejar clic en un área vacía del grafo para limpiar la selección
   cy.on('tap', function (event) {
@@ -175,40 +176,40 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // Restablecer estilos al hacer clic en una arista
-  cy.on('tap', 'edge', function (event) {
-    var edge = event.target;
-    edge.style({
-      'line-color': '#ECB800',
-      'width': 2
-    });
-    selectedEdgeId = edge.id();
-  });
+  // cy.on('tap', 'edge', function (event) {
+  //   var edge = event.target;
+  //   edge.style({
+  //     'line-color': '#ECB800',
+  //     'width': 2
+  //   });
+  //   selectedEdgeId = edge.id();
+  // });
 
   // Función para remover los estilos de las aristas
-  function removeEdgeStyles() {
-    cy.edges().forEach(function (edge) {
-      edge.style({
-        'line-color': '#ccc',
-        'width': 2
-      });
-    });
-  }
+  // function removeEdgeStyles() {
+  //   cy.edges().forEach(function (edge) {
+  //     edge.style({
+  //       'line-color': '#ccc',
+  //       'width': 2
+  //     });
+  //   });
+  // }
 
   // Restablecer estilos al hacer clic en el área vacía del grafo
-  cy.on('tap', function (event) {
-    if (event.target === cy) {
-      removeEdgeStyles();
-      cy.nodes().removeClass('working-node');
-      cy.edges().removeClass('considering-edge');
-      cy.edges().removeClass('not-in-mst');
-    }
-  });
+  // cy.on('tap', function (event) {
+  //   if (event.target === cy) {
+  //     removeEdgeStyles();
+  //     cy.nodes().removeClass('working-node');
+  //     cy.edges().removeClass('considering-edge');
+  //     cy.edges().removeClass('not-in-mst');
+  //   }
+  // });
 
   // Restablecer estilos al hacer clic en un nodo
   cy.on('tap', 'node', function (event) {
     cy.nodes().removeClass('working-node');
     cy.edges().removeClass('considering-edge');
-    cy.edges().removeClass('not-in-mst');
+    // cy.edges().removeClass('not-in-mst');
   });
 
   // Función para guardar el peso de la arista
@@ -221,14 +222,28 @@ document.addEventListener('DOMContentLoaded', function () {
     if (edgeWeight.trim() !== '' && edgeWeight >= 0) {
       clearError(edgeWeightErrorElement, edgeWeightInput);
 
-      // Crear el ID único para la nueva arista
-      var newEdgeId = selectedNodeId + node.id();
+      // Crear los IDs únicos para ambas direcciones de la arista
+      var edgeId1 = selectedNodeId + node.id();
+      var edgeId2 = node.id() + selectedNodeId;
 
-      // Agregar la nueva arista al grafo
-      cy.add({ data: { id: newEdgeId, source: selectedNodeId, target: node.id(), weight: edgeWeight } });
+      // Buscar la arista existente en ambas direcciones
+      var existingEdge1 = cy.getElementById(edgeId1);
+      var existingEdge2 = cy.getElementById(edgeId2);
 
-      // Guardar el ID de la arista recién creada
-      selectedEdgeId = newEdgeId;
+      if (existingEdge1.nonempty()) {
+        // La arista ya existe en la dirección seleccionada
+        existingEdge1.data('weight', edgeWeight);
+      } else if (existingEdge2.nonempty()) {
+        // La arista ya existe en la dirección inversa
+        existingEdge2.data('weight', edgeWeight);
+      } else {
+        // La arista no existe en ninguna dirección, agrégala al grafo
+        cy.add({ data: { id: edgeId1, source: selectedNodeId, target: node.id(), weight: edgeWeight } });
+        cy.edges().getElementById(edgeId1).addClass('not-in-mst');
+      }
+
+      // Guardar el ID de la arista recién creada o actualizada
+      selectedEdgeId = edgeId1;
 
       // Limpiar la selección y ocultar el modal
       document.getElementById('edgeWeight').value = "";
@@ -265,6 +280,168 @@ document.addEventListener('DOMContentLoaded', function () {
     inputError.classList.remove("is-invalid");
   }
 
+  // Event listener para el cambio en el menú desplegable
+  var algorithmSelect = document.getElementById('algorithmSelect');
+  algorithmSelect.addEventListener('change', function () {
+    var selectedAlgorithm = algorithmSelect.value;
+    var algorithmSelects = document.getElementById('algorithmSelect');
+    clearError(errorContainer,algorithmSelects);
+    // Mostrar u ocultar el input startNodeId según el algoritmo seleccionado
+    var startNodeIdInput = document.getElementById('startNodeId');
+    if (selectedAlgorithm === 'prim' || selectedAlgorithm === 'dijkstra') {
+      startNodeIdInput.style.display = 'block';
+    } else {
+      startNodeIdInput.style.display = 'none';
+    }
+  });
+  //evento escucha para correr algoritmo seleccionado
+  document.getElementById('runAlgoritmo').addEventListener('click', function () {
+    var selectedAlgorithm = document.getElementById('algorithmSelect').value;
+    var selectedAlgorithms = document.getElementById('algorithmSelect');
+    switch (selectedAlgorithm) {
+      case 'prim':
+        runPrimAlgorithm();
+        break;
+      case 'kruskal':
+        runKruskalAlgorithm();
+        break;
+      case 'dijkstra':
+        runDijkstraAlgorithm();
+        break;
+      default:
+        // Manejar el caso de no seleccionar un algoritmo
+        showError('Selecciona un algoritmo antes de ejecutar.',errorContainer,selectedAlgorithms);
+    }
+  });
+  //_________________________________________Funciones de ALgoritmo Prim______________________________________--
+  // Lógica del algoritmo de Prim
+  function runPrimAlgorithm() {
+    var startNodeId = document.getElementById('startNodeId').value.trim().toUpperCase();
+    var startNodeIdInput = document.getElementById('startNodeId');
+    clearError(errorContainer, startNodeIdInput);
+    if (cy.getElementById(startNodeId).nonempty()) {
+      cy.edges().removeClass('mst');
+      cy.edges().removeClass('not-in-mst');
+      altRunPrimFromNode(startNodeId);
+    } else {
+
+      showError("El nodo de inicio no existe en el grafo.", errorContainer, startNodeIdInput);
+    }
+
+  }
+
+  function altRunPrimFromNode(startNodeId) {
+    let graph = new Graph(startNodeId, cy.nodes().length);
+
+    let includedNodes = new Set();
+    includedNodes.add(startNodeId);
+
+    function getAvailableEdges() {
+      var edges = [];
+
+      includedNodes.forEach(function (nodeId) {
+        cy.getElementById(nodeId).connectedEdges().forEach(function (edge) {
+          let _edge = new Edge(edge.id(), edge.source().id(), edge.target().id(), edge.data("weight"));
+          var adjacentNodeId = _edge.target === nodeId ? _edge.source : _edge.target;
+
+          if (!includedNodes.has(adjacentNodeId))
+            edges.push(_edge);
+        })
+      });
+
+      return edges;
+    }
+
+    function calculateNextStep() {
+      let availableEdges = getAvailableEdges();
+      if (availableEdges.length === 0)
+        return;
+
+      graph.setAvailableEdges(availableEdges);
+
+      let [edgeToUse, minEdges] = findMinEdges(availableEdges);
+      graph.setSelectedEdges(minEdges);
+
+      graph.addUsedEdge(edgeToUse);
+
+      let unvisitedNodeId = includedNodes.has(edgeToUse.source) ? edgeToUse.target : edgeToUse.source;
+      includedNodes.add(unvisitedNodeId);
+      graph.addVisitedNode(unvisitedNodeId);
+
+      if (!graph.isDone())
+        calculateNextStep();
+    }
+
+    calculateNextStep();
+
+    startReproduction(cy, graph.states, graph.getStepsDescriptions());
+  }
+
+  function findMinEdges(edges) {
+    if (edges.length === 0) return null;
+
+    let minEdges = [];
+    let minWeight = edges[0].weight;
+    edges.forEach(function (edge) {
+      if (edge.weight === minWeight)
+        minEdges.push(edge);
+      else if (edge.weight < minWeight) {
+        minEdges = [edge];
+        minWeight = edge.weight;
+      }
+    });
+
+    let edgeToUse = minEdges[0];
+    minEdges.forEach(function (edge) {
+      if (edge.source + edge.target < edgeToUse.source + edgeToUse.target)
+        edgeToUse = edge;
+    });
+    return [edgeToUse, minEdges];
+  }
+
+  function runKruskalAlgorithm() {
+    let graph = new KruskalGraph(cy.nodes().length);
+
+    function calculateStates() {
+      let sortedEdges = cy.edges().map((edge) => new Edge(edge.id(), edge.source().id(), edge.target().id(), edge.data("weight")));
+      sortedEdges.sort((a, b) => a.weight - b.weight);  
+
+      while (!graph.isDone()) {
+        let availableEdges = sortedEdges.filter((edge) => graph.isAvailable(edge));
+        graph.setAvailableEdges(availableEdges);
+
+        function checkAvEdgeAt(i) {
+          if (i >= availableEdges.length) return;
+
+          let selectedEdge = availableEdges[i];
+          graph.setSelectedEdges([selectedEdge]);
+
+          let sourceNodeId = selectedEdge.source;
+          let targetNodeId = selectedEdge.target;
+          
+          graph.tryAddToDisjointSet(sourceNodeId);
+          graph.tryAddToDisjointSet(targetNodeId);
+
+          if (graph.find(sourceNodeId) === graph.find(targetNodeId)) {
+            graph.setRejectedEdge(selectedEdge);
+            checkAvEdgeAt(i + 1);
+          }
+          else {
+            graph.addUsedEdge(selectedEdge);  
+
+            if (!graph.states[graph.states.length - 1].visitedNodes.includes(selectedEdge.source))
+              graph.addVisitedNode(selectedEdge.source);
+            if (!graph.states[graph.states.length - 1].visitedNodes.includes(selectedEdge.target))
+              graph.addVisitedNode(selectedEdge.target);
+          }
+        }
+        checkAvEdgeAt(0);
+      }
+    }
+
+    calculateStates();
+    startReproduction(cy, graph.states, graph.getStepsDescriptions());
+  }
   /*  DIJKSTRA ALGORITHM  */
   function runDijkstraAlgorithm() {
     var startNodeId = document.getElementById('startNodeId').value.trim().toUpperCase();
@@ -282,7 +459,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   function runDijkstraAlgorithmFromNode(startNodeId, endNodeId){
-    var dijkstraStepsDiv = document.getElementById('algorithmStepsDijkstra');
+    var dijkstraStepsDiv = document.getElementById('algorithmSteps');
     dijkstraStepsDiv.innerHTML = '';
     console.log("Soy el algoritmo Dijkstra");
     var adjacencyList = getAdjacencyList();
@@ -509,10 +686,125 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  function oldrunKruskalAlgorithm() {
+    var edges = cy.edges().toArray();
+    edges.sort((a, b) => a.data('weight') - b.data('weight'));
+
+    var algorithmStepsContainer = document.getElementById('algorithmSteps');
+    algorithmStepsContainer.innerHTML = ''; // Limpiar el contenido previo
+
+    // Mostrar las aristas ordenadas de menor a mayor peso
+    var sortedEdgesInfo = 'Aristas ordenadas de menor a mayor peso: ';
+    edges.forEach((edge, i) => {
+      sortedEdgesInfo += `${edge.id()} (${edge.data('weight')}), `;
+    });
+    algorithmStepsContainer.innerHTML += `<p>${sortedEdgesInfo.slice(0, -2)}.</p>`;
+
+    var index = edges.length + 1; // Incrementar el índice para mostrar el contenido después de la lista ordenada
+    var minimumSpanningTree = [];
+    var disjointSet = {};
+
+    edges.forEach((edge, i) => {
+      var sourceNode = edge.source().id();
+      var targetNode = edge.target().id();
+
+      if (!disjointSet[sourceNode]) disjointSet[sourceNode] = sourceNode;
+      if (!disjointSet[targetNode]) disjointSet[targetNode] = targetNode;
+
+      // Función auxiliar para verificar si agregar la arista crea un ciclo
+      function formsCycle(source, target) {
+        return find(source) === find(target);
+      }
+
+      var cycleCheck = formsCycle(sourceNode, targetNode);
+      setTimeout(() => {
+        // Agregar información de paso a paso al div sobre la verificación de ciclos
+        var stepCycleInfo = `Verificación de ciclo para la arista ${edge.id()}: ${cycleCheck ? 'Se descarta, ya que forma un ciclo.' : 'No forma un ciclo, se agrega.'}`;
+        algorithmStepsContainer.innerHTML += `<p>${stepCycleInfo}</p>`;
+      }, index * 1000); // Mostrar la verificación después de la selección visual
+
+      if (!cycleCheck) {
+        union(sourceNode, targetNode);
+        minimumSpanningTree.push(edge);
+        setTimeout(() => {
+          // Cambiar el color del nodo al que pertenece la arista que no forma un ciclo
+          cy.getElementById(sourceNode).addClass('visited-node');
+          cy.getElementById(targetNode).addClass('visited-node');
+          // Resaltar la arista procesada visualmente
+          edge.addClass('mst');
+          edge.removeClass('not-in-mst');
+          // Agregar información de paso a paso al div sobre la selección de la arista
+          var stepInfo = `Paso ${i + 1}: Se selecciona la arista ${edge.id()} con peso ${edge.data('weight')}.`;
+          algorithmStepsContainer.innerHTML += `<p>${stepInfo}</p>`;
+        }, index * 1000); // Cambiar el tiempo según sea necesario
+
+        // Resaltar visualmente las aristas seleccionadas en cy
+        setTimeout(() => {
+          edge.addClass('selected');
+          edge.removeClass('not-in-mst');
+        }, index * 1000);
+      } else {
+        setTimeout(() => {
+          // Cambiar el color de la arista que forma un ciclo
+          edge.addClass('not-in-mst');
+          // Agregar información de paso a paso al div sobre la arista que forma un ciclo
+          var stepCycleInfo = `Paso ${i + 1}: Se descarta la arista ${edge.id()} ya que forma un ciclo.`;
+          algorithmStepsContainer.innerHTML += `<p>${stepCycleInfo}</p>`;
+        }, index * 1000); // Cambiar el tiempo según sea necesario
+      }
+
+      index++;
+    });
+
+    // Cambiar el color de las aristas que no se utilizaron
+    cy.edges().forEach((edge) => {
+      if (!minimumSpanningTree.includes(edge)) {
+        setTimeout(() => {
+          edge.addClass('not-in-mst');
+          // Agregar información de paso a paso al div sobre la arista no utilizada
+          var unusedEdgeInfo = `Arista no utilizada: ${edge.id()}.`;
+          algorithmStepsContainer.innerHTML += `<p>${unusedEdgeInfo}</p>`;
+        }, index * 1000); // Cambiar el tiempo según sea necesario
+        index++;
+      }
+    });
+
+    function find(node) {
+      if (disjointSet[node] !== node) {
+        disjointSet[node] = find(disjointSet[node]);
+      }
+      return disjointSet[node];
+    }
+
+    function union(nodeA, nodeB) {
+      var rootA = find(nodeA);
+      var rootB = find(nodeB);
+      disjointSet[rootA] = rootB;
+    }
+  }
+
+
+
+  cy.style().selector('.working-node').style({
+    'background-color': 'yellow'
+  });
+
+  cy.style().selector('.considering-edge').style({
+    'line-color': 'red',
+    'target-arrow-color': 'red'
+  });
+
+  cy.style().selector('.not-in-mst').style({
+    'line-opacity': 0.3
+  });
+
+  // Event listeners
   document.getElementById('edgeWeightButton').addEventListener('click', guardarPeso);
   document.getElementById('editEdgeWeightButton').addEventListener('click', editaristabutton);
   document.getElementById('addNodeButton').addEventListener('click', addNode);
   document.getElementById('saveEdgeWeightButton').addEventListener('click', editEdgeWeight);
   document.getElementById('deleteSelectedNode').addEventListener('click', deleteSelectedElement);
-  document.getElementById('runDijkstraAlgorithmButton').addEventListener('click', runDijkstraAlgorithm);
+  //document.getElementById('runPrimAlgorithmButton').addEventListener('click', runPrimAlgorithm); ya no se ocupan por el select
+  //document.getElementById('runKruskalAlgorithmButton').addEventListener('click', runKruskalAlgorithm); en el select se ven las opciones de algoritmo
+
 });

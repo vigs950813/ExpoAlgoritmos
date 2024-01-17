@@ -1,5 +1,11 @@
 /*
+
+    ¡¡¡¡¡¡          NO ELIMINAR NI MODIFICAR            !!!!!!!
+
+
     Script que permite desplegar la lista del botón sin necesidad de dar clic.
+
+    
 */
 
 

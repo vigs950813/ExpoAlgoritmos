@@ -1,0 +1,30 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+}
+
+#dijkstraSteps {
+  margin: 20px;
+  border: 1px solid #ccc;
+  display: inline-block;
+}
+
+#dijkstraTable {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+#dijkstraTable td,
+#dijkstraTable th {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+#dijkstraTable th {
+  background-color: #f2f2f2;
+}
+
+.nodo-optimo {
+  background-color: #ffcccb; /* Puedes cambiar el color de fondo según tus preferencias */
+}
