@@ -28,7 +28,12 @@ document.addEventListener('DOMContentLoaded', function () {
           'background-color': '#627A93',
           'label': 'data(id)',
           'width': 30,
-          'height': 30
+          'height': 30,
+          'color': 'white',
+          'text-background-color': '#627A93',
+          'text-background-opacity': 0.7,
+          'text-background-shape': 'round-rectangle',
+          'text-background-padding': '1px'
         }
       },
       {
@@ -39,6 +44,10 @@ document.addEventListener('DOMContentLoaded', function () {
           'target-arrow-color': '#ccc',
           'target-arrow-shape': 'triangle',
           'label': 'data(weight)',
+          'text-background-color': 'white',
+          'text-background-opacity': 0.7,
+          'text-background-shape': 'round-rectangle',
+          'text-background-padding': '1px'
         }
       },
       // Estilos adicionales
@@ -62,8 +71,8 @@ document.addEventListener('DOMContentLoaded', function () {
       {
         selector: '.selected-edge',
         style: {
-          'line-color': 'rgb(61, 126, 122)',
-          'target-arrow-color': 'rgb(61, 126, 122)',
+          'line-color': 'rgb(0, 178, 62)',
+          'target-arrow-color': 'rgb(0, 178, 62)',
           'label': 'data(weight)'
         }
       },
@@ -710,7 +719,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   cy.style().selector('.not-in-mst').style({
-    'line-opacity': 0.3
+    'line-opacity': 1
   });
 
   // Event listeners

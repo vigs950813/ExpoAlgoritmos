@@ -236,11 +236,11 @@ span.material-icons {
 }
 
 .availableEdge {
-  color: rgb(255, 0, 0);
+  color:  rgb(255, 0, 0);
 }
 
 .selectedEdge {
-  color: rgb(61, 126, 122);
+  color: rgb(0, 178, 62);
 }
 
 .usedEdge {
