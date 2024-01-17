@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <!-- Configuración básica del documento -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Estilos y fuentes -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inconsolata&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css"
+    />
+
+    <!-- Título de la página -->
+    <title>Análisis y diseño de algoritmos Dijkstra</title>
+  </head>
+
+  <body>
+    <!-- Encabezado de la página -->
+    <header>
+      <div class="container">
+        <div class="text-center">
+          <div class="row align-items-center">
+            <!-- Logo de la ESCOM -->
+            <div class="col">
+              <img
+                src="../images/logoBlancoESCOM.png"
+                class="image"
+                id="logoBlancoEscom"
+                alt="Error al cargar imagen (logoBlancoEscom.png)"
+              />
+            </div>
+
+            <!-- Texto de la ESCOM -->
+            <div class="col">
+              <div class="centerColText1">Instituto Politécnico Nacional</div>
+              <div class="centerColText2">Escuela Superior de Cómputo</div>
+              <div class="centerColText3">Análisis y Diseño de Algoritmos</div>
+            </div>
+
+            <!-- Logo del IPN -->
+            <div class="col">
+              <img
+                src="../images/logoBlancoIPN.png"
+                class="image"
+                id="logoBlancoIPN"
+                alt="Error al cargar imagen (logoBlancoIPN.png)"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Barra de navegación principal -->
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <!-- Botón para el menú desplegable en dispositivos pequeños -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNavDropdown"
+          aria-controls="navbarNavDropdown"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Elementos de la barra de navegación -->
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+          <ul class="navbar-nav">
+            <!-- Enlace a la página de inicio -->
+            <li class="nav-item">
+              <a class="nav-link" href="../index.html"
+                ><i class="fas fa-home"></i
+              ></a>
+            </li>
+
+            <!-- Enlace a la página de Prim (activa) -->
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="prim.html"
+                >Prim</a
+              >
+            </li>
+
+            <!-- Enlace a la página de Kruskal -->
+            <li class="nav-item">
+              <a class="nav-link" href="kruskal.html">Kruskal</a>
+            </li>
+
+            <!-- Enlace a la página de Dijkstra -->
+            <li class="nav-item">
+              <a class="nav-link" href="dijkstra.html">Dijkstra</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Sección de la página con título y formulario -->
+    <section class="navbar">
+      <div class="container-fluid">
+        <!-- Título de la sección -->
+        <div class="navbar-brand"><h2>Algoritmo de Dijkstra</h2></div>
+
+        <!-- Formulario de interacción con el grafo -->
+        <form class="d-flex">
+          <!-- Entrada de texto para el nombre del nuevo nodo -->
+          <input
+            type="text"
+            class="form-control me-1"
+            placeholder="Ingresa el nombre del nodo"
+            id="newNodeId"
+            required
+          />
+
+          <!-- Botón para agregar un nuevo nodo -->
+          <button
+            class="btn btn-outline-secondary"
+            type="button"
+            id="addNodeButton"
+          >
+            Agregar nodo
+          </button>
+
+          <!-- Botón para editar el peso de una arista -->
+          <button
+            class="btn btn-outline-warning"
+            type="button"
+            id="editEdgeWeightButton"
+            data-bs-target="#editEdgeWeightModal"
+          >
+            Editar peso de arista
+          </button>
+
+          <!-- Botón para eliminar un nodo seleccionado -->
+          <button
+            class="btn btn-outline-danger"
+            type="button"
+            id="deleteSelectedNode"
+          >
+            Eliminar Seleccion
+          </button>
+
+          <!-- Entrada de texto para el nombre del nodo de inicio del algoritmo -->
+          <input
+            type="text"
+            class="form-control me-2"
+            placeholder="Ingresa el nombre del nodo de inicio"
+            id="startNodeId"
+            required
+          />
+
+          <!-- Botón para ejecutar el algoritmo de Prim -->
+          <button
+            class="btn btn-outline-success"
+            type="button"
+            id="runPrimAlgorithmButton"
+          >
+            Ejecutar Algoritmo de Prim
+          </button>
+
+          <!-- Botón para ejecutar el algoritmo de Dijkstra -->
+          <button
+            class="btn btn-outline-success"
+            type="button"
+            id="runDijkstraAlgorithmButton"
+          >
+            Ejecutar Algoritmo de Dijkstra
+          </button>
+
+
+
+        </form>
+      </div>
+    </section>
+
+    <!-- Contenedor para mensajes de error -->
+    <div id="errorContainer" class="container mt-3"></div>
+
+    <!-- Sección principal de la página con el grafo -->
+    <section class="section2">
+      <div id="cy-container">
+        <!-- Contenedor para el grafo -->
+        <div id="cy"></div>
+
+        <!-- Contenedor para los pasos del algoritmo de Dijkstra -->
+        <div id="algorithmStepsDijkstra">
+        </div>
+      </div>
+    </section>
+
+    <!-- Modal para ingresar el peso de una nueva arista -->
+    <div
+      class="modal fade"
+      id="edgeWeightModal"
+      tabindex="-1"
+      aria-labelledby="edgeWeightModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="edgeWeightModalLabel">
+              Ingrese Peso de Arista
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- Entrada de número para el peso de la arista -->
+            <label for="newEdgeWeight" class="form-label">Peso:</label>
+            <input
+              type="number"
+              min="1"
+              class="form-control"
+              id="edgeWeight"
+              required
+            />
+          </div>
+
+          <!-- Contenedor para mensajes de error en el peso de la arista -->
+          <div id="edgeWeightError" class="container mt-3"></div>
+
+          <div class="modal-footer">
+            <!-- Botón para guardar el peso de la arista -->
+            <button type="button" class="btn btn-primary" id="edgeWeightButton">
+              Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal para editar el peso de una arista existente -->
+    <div
+      class="modal fade"
+      id="editEdgeWeightModal"
+      tabindex="-1"
+      aria-labelledby="editEdgeWeightModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editEdgeWeightModalLabel">
+              Editar Peso de Arista
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <!-- Entrada de número para el nuevo peso de la arista -->
+            <label for="newEdgeWeight" class="form-label">Nuevo Peso:</label>
+            <input
+              type="number"
+              min="1"
+              class="form-control"
+              id="newEdgeWeight"
+              required
+            />
+          </div>
+
+          <!-- Contenedor para mensajes de error en el nuevo peso de la arista -->
+          <div id="editEdgeWeightError" class="container mt-3"></div>
+
+          <div class="modal-footer">
+            <!-- Botón para guardar los cambios en el peso de la arista -->
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="saveEdgeWeightButton"
+            >
+              Guardar Cambios
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pie de página -->
+    <footer class="footer">
+      <div class="container">
+        <p class="text-center">
+          &copy; 2023 Instituto Politécnico Nacional - Escuela Superior de
+          Cómputo | Todos los derechos reservados
+        </p>
+      </div>
+    </footer>
+
+    <!-- Scripts necesarios (Popper, Bootstrap, tu archivo JS, Cytoscape) -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"
+      integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"
+      integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13"
+      crossorigin="anonymous"
+    ></script>
+    <script src="../js/appDijkstra.js"></script>
+    <script src="https://unpkg.com/cytoscape@3.18.0/dist/cytoscape.min.js"></script>
+  </body>
+</html>
